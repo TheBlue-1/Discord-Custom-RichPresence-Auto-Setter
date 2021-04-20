@@ -3,13 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Discord_Custom_Rich_Presence_Auto_Setter"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Button Content="test" HorizontalAlignment="Left" Margin="576,46,0,0" VerticalAlignment="Top" Click="Button_Click"/>
-        <Label Content="Label" HorizontalAlignment="Left" Margin="70,66,0,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Margin="149,79,0,0" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Button Content="test" HorizontalAlignment="Left" Margin="576,46,0,0" VerticalAlignment="Top"
+                Click="Button_Click" />
+        <Label Content="Label" HorizontalAlignment="Left" Margin="70,66,0,0" VerticalAlignment="Top" />
+        <TextBox HorizontalAlignment="Left" Margin="149,79,0,0" Text="TextBox" TextWrapping="Wrap"
+                 VerticalAlignment="Top" Width="120" />
 
     </Grid>
 </Window>

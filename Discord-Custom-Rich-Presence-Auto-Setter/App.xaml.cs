@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+﻿#region
 using System.Windows;
+#endregion
 
-namespace Discord_Custom_Rich_Presence_Auto_Setter
-{
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application
-    {
-    }
+namespace Discord_Custom_Rich_Presence_Auto_Setter {
+	/// <summary>
+	///     Interaction logic for App.xaml
+	/// </summary>
+	public partial class App : Application { }
 }

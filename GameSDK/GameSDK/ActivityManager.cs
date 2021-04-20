@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Discord
+﻿namespace GameSDK.GameSDK
 {
     public partial class ActivityManager
     {

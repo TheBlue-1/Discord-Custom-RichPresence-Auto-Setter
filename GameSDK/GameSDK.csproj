@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net5.0-windows</TargetFramework>
+		<UseWPF>true</UseWPF>
+	</PropertyGroup>
+	<ItemGroup>
+
+		<ContentWithTargetPath Include="dll\discord_game_sdk.dll">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<TargetPath>discord_game_sdk.dll</TargetPath>
+		</ContentWithTargetPath>
+
+	</ItemGroup>
+</Project>
