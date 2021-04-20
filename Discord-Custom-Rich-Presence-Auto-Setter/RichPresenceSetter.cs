@@ -9,15 +9,18 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter {
 	public class RichPresenceSetter : IDisposable {
 		private readonly Task _updater;
 		private ActivityManager ActivityManager => Discord.GetActivityManager();
+		public long ApplicationId { get; }
 
 		public static Activity DefaultActivity => new("RichPresenceSetter", "running", "started", true, 0, ActivityType.Playing, 1,
 			2, null, null, null, null, null, null,
 			null, null, 0, 0);
 		public static Lobby DefaultLobby => new(2, true, LobbyType.Private, 0, new Dictionary<string, string>());
-		private Discord Discord { get; } = new(793125319657783306, (ulong)CreateFlags.Default);
+		private Discord Discord { get; }
 		private LobbyManager LobbyManager => Discord.GetLobbyManager();
 
-		public RichPresenceSetter() {
+		public RichPresenceSetter(long applicationId) {
+			ApplicationId = applicationId;
+			Discord = new Discord(ApplicationId, (ulong)CreateFlags.Default);
 			ActivityManager.RegisterCommand();
 
 			_updater = UpdatePeriodically(new TimeSpan(0, 0, 0, 0, 500));
