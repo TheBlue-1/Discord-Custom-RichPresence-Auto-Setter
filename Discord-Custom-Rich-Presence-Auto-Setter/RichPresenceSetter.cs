@@ -1,9 +1,7 @@
 ﻿#region
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using Discord;
 #endregion
 
@@ -11,27 +9,25 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter {
 	public class RichPresenceSetter {
 		private ActivityManager ActivityManager => Discord.GetActivityManager();
 
-		public Activity DefaultActivity { get; } = new("RichPresenceSetter", "running", "started", true, 0, ActivityType.Playing, 1,
+		public static Activity DefaultActivity => new("RichPresenceSetter", "running", "started", true, 0, ActivityType.Playing, 1,
 			2, null, null, null, null, null, null,
 			null, null, 0, 0);
-		public Lobby DefaultLobby { get; } = new(2, true, LobbyType.Private, 0, new Dictionary<string, string>());
-		private Discord.Discord Discord { get; }= new(418559331265675294, (ulong)CreateFlags.Default);
+		public static Lobby DefaultLobby => new(2, true, LobbyType.Private, 0, new Dictionary<string, string>());
+		private Discord.Discord Discord { get; } = new(793125319657783306, (ulong)CreateFlags.Default);
 		private LobbyManager LobbyManager => Discord.GetLobbyManager();
 
 		public RichPresenceSetter() {
-		/*	Discord.SetLogHook(LogLevel.Debug, (level, message) =>
-			{
-				Console.WriteLine("Log[{0}] {1}", level, message);
-			});*/
-			_ = UpdatePeriodically(new TimeSpan(0, 0, 5));
+			ActivityManager.RegisterCommand();
+
+			_ = UpdatePeriodically(new TimeSpan(0, 0, 0, 0, 500));
 		}
 
 		private async Task<Discord.Lobby> CreateLobby(Lobby lobby) {
 			LobbyTransaction transaction = LobbyManager.GetLobbyCreateTransaction();
 			transaction.SetCapacity(lobby.Capacity);
-			//transaction.SetLocked(lobby.Locked);
-			//transaction.SetOwner(lobby.OwnerId);
-		
+			transaction.SetLocked(lobby.Locked);
+			transaction.SetOwner(lobby.OwnerId);
+
 			transaction.SetType(lobby.Type);
 			foreach ((string key, string value) in lobby.Metadata) {
 				transaction.SetMetadata(key, value);

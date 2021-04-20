@@ -1,35 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿#region
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+#endregion
 
-namespace Discord_Custom_Rich_Presence_Auto_Setter
-{
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window {
-
+namespace Discord_Custom_Rich_Presence_Auto_Setter {
+	/// <summary>
+	///     Interaction logic for MainWindow.xaml
+	/// </summary>
+	public partial class MainWindow : Window {
 		private RichPresenceSetter Rps { get; } = new();
-        public MainWindow()
-        {
-            InitializeComponent();
-        }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
+		public RichPresenceSetter.Activity Activity { get; set; } = RichPresenceSetter.DefaultActivity;
+		public RichPresenceSetter.Lobby Lobby { get; set; } = RichPresenceSetter.DefaultLobby;
 
-		   Rps.UpdateActivity();
+		public MainWindow() {
+			InitializeComponent();
 		}
-    }
+
+		private void Button_Click(object sender, RoutedEventArgs e) {
+			_ = Rps.UpdateActivity(Activity, Lobby);
+		}
+	}
 }
