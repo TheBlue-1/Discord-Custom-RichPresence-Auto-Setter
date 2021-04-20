@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <RootNamespace>Discord_Custom_Rich_Presence_Auto_Setter</RootNamespace>
+    <UseWPF>true</UseWPF>
+    <Platforms>AnyCPU;x64;x86</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+
+	       <ContentWithTargetPath Include="dll\discord_game_sdk.dll">
+    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <TargetPath>discord_game_sdk.dll</TargetPath>
+  </ContentWithTargetPath>						
+	 
+  </ItemGroup>
+
+</Project>
