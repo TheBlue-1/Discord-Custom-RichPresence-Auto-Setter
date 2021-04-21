@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Discord_Custom_Rich_Presence_Auto_Setter.Requirements;
 #endregion
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter {
@@ -31,9 +32,13 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter {
 				Rpc = new RichPresenceSetter(config.ApplicationId ?? DefaultApplicationId);
 			}
 
+			if (Rpc == null) {
+				throw new InvalidOperationException("no default application id set");
+			}
 			await Rpc.UpdateActivity(config.Activity ?? RichPresenceSetter.DefaultActivity, config.Lobby ?? RichPresenceSetter.DefaultLobby);
 		}
 
-		public record Config(RichPresenceSetter.Activity Activity, RichPresenceSetter.Lobby Lobby, long? ApplicationId);
+		public record Config(RichPresenceSetter.Activity Activity, RichPresenceSetter.Lobby Lobby, List<Requirement> Requirements, uint Rank,
+			long? ApplicationId);
 	}
 }
