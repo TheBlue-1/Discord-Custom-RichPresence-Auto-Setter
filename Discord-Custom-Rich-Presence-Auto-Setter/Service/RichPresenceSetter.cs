@@ -1,20 +1,16 @@
 ﻿#region
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using GameSDK.GameSDK;
+using Activity = Discord_Custom_Rich_Presence_Auto_Setter.Models.Activity;
 #endregion
 
-namespace Discord_Custom_Rich_Presence_Auto_Setter {
+namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 	public class RichPresenceSetter : IDisposable {
 		private readonly Task _updater;
 		private ActivityManager ActivityManager => Discord.GetActivityManager();
 		public long ApplicationId { get; }
 
-		public static Activity DefaultActivity => new("RichPresenceSetter", "running", "started", true, 0, ActivityType.Playing, 1,
-			2, null, null, null, null, null, null,
-			null, null, 0, 0);
-		public static Lobby DefaultLobby => new(2, true, LobbyType.Private, 0, new Dictionary<string, string>());
 		private Discord Discord { get; }
 		private LobbyManager LobbyManager => Discord.GetLobbyManager();
 
@@ -26,7 +22,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter {
 			_updater = UpdatePeriodically(new TimeSpan(0, 0, 0, 0, 500));
 		}
 
-		private async Task<GameSDK.GameSDK.Lobby> CreateLobby(Lobby lobby) {
+		private async Task<Lobby> CreateLobby(Models.Lobby lobby) {
 			LobbyTransaction transaction = LobbyManager.GetLobbyCreateTransaction();
 			transaction.SetCapacity(lobby.Capacity);
 			transaction.SetLocked(lobby.Locked);
@@ -37,8 +33,8 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter {
 				transaction.SetMetadata(key, value);
 			}
 
-			TaskCompletionSource<GameSDK.GameSDK.Lobby> tcs = new();
-			LobbyManager.CreateLobby(transaction, (Result result, ref GameSDK.GameSDK.Lobby createdLobby) => {
+			TaskCompletionSource<Lobby> tcs = new();
+			LobbyManager.CreateLobby(transaction, (Result result, ref Lobby createdLobby) => {
 				if (result != Result.Ok) {
 					throw new Exception("lobby creation failed");
 				}
@@ -47,10 +43,10 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter {
 			return await tcs.Task;
 		}
 
-		public async Task UpdateActivity(Activity activity = null, Lobby lobby = null) {
-			activity ??= DefaultActivity;
-			lobby ??= DefaultLobby;
-			GameSDK.GameSDK.Lobby dcLobby = await CreateLobby(lobby);
+		public async Task UpdateActivity(Activity activity = null, Models.Lobby lobby = null) {
+			activity ??= Activity.DefaultActivity;
+			lobby ??= Models.Lobby.DefaultLobby;
+			Lobby dcLobby = await CreateLobby(lobby);
 
 			GameSDK.GameSDK.Activity dcActivity = new() {
 				Name = activity.Name,
@@ -86,11 +82,5 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter {
 			_updater.Dispose();
 			Discord.Dispose();
 		}
-
-		public record Activity(string Name, string State, string Details, bool Instance, long ApplicationId, ActivityType ActivityType, long StartTimestamp,
-			long EndTimestamp, string LargeImage, string LargeText, string SmallImage, string SmallText, string MatchSecret, string JoinSecret,
-			string SpectateSecret, string PartyId, int MaxPartySize, int CurrentPartySize);
-
-		public record Lobby(uint Capacity, bool Locked, LobbyType Type, long OwnerId, Dictionary<string, string> Metadata);
 	}
 }
