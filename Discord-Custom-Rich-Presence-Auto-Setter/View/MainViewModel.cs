@@ -18,14 +18,13 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.View {
 		private ObservableCollection<IListable> App { get; } = new();
 
 		public RelayCommand AppClick => new(() => { List = App; }, () => List != App);
-		public RelayCommand DeleteClick => new(() => { List.Remove(Selected); }, () => Selected!=null);
-		public RelayCommand DuplicateClick => new(() => { List.Insert(SelectedIndex+1,Selected.Duplicate() ); }, () => Selected!=null);
-		public RelayCommand UpClick => new(() => { List.Move(SelectedIndex,SelectedIndex-1); }, () => Selected!=null&&SelectedIndex>0);
-		public RelayCommand DownClick => new(() => { List.Move(SelectedIndex, SelectedIndex + 1); }, () => Selected != null && SelectedIndex < List.Count-1);
 
 		private GeneralizedObservableList<IListable, Config> Configs { get; } = new();
 		public RelayCommand ConfigsClick => new(() => { List = Configs; }, () => List != Configs);
 		public Visibility ConfigVisibility => SelectedConfig == null ? Visibility.Hidden : Visibility.Visible;
+		public RelayCommand DeleteClick => new(() => { List.Remove(Selected); }, () => Selected != null);
+		public RelayCommand DownClick => new(() => { List.Move(SelectedIndex, SelectedIndex + 1); }, () => Selected != null && SelectedIndex < List.Count - 1);
+		public RelayCommand DuplicateClick => new(() => { List.Insert(SelectedIndex + 1, Selected.Duplicate()); }, () => Selected != null);
 		private GeneralizedObservableList<IListable, Lobby> Lobbies { get; } = new();
 		public RelayCommand LobbiesClick => new(() => { List = Lobbies; }, () => List != Lobbies);
 
@@ -35,6 +34,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.View {
 
 		public Config SelectedConfig => Selected as Config;
 		public Lobby SelectedLobby => Selected as Lobby;
+		public RelayCommand UpClick => new(() => { List.Move(SelectedIndex, SelectedIndex - 1); }, () => Selected != null && SelectedIndex > 0);
 
 		public ObservableCollection<IListable> List {
 			get => _list;
@@ -42,11 +42,6 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.View {
 				_list = value;
 				OnPropertyChanged();
 			}
-		}
-		public int SelectedIndex {
-			get;
-			set;
-
 		}
 		public IListable Selected {
 			get => _selected;
@@ -61,6 +56,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.View {
 				OnPropertyChanged(nameof (ConfigVisibility));
 			}
 		}
+		public int SelectedIndex { get; set; }
 
 		public MainViewModel() {
 			List = App;
