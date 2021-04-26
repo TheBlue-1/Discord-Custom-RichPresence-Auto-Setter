@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:view="clr-namespace:Discord_Custom_Rich_Presence_Auto_Setter.View"
         mc:Ignorable="d"
-        Title="Discord Rich-Presence Setter" Height="540" Width="960">
+        Title="Discord Rich-Presence Setter" MinHeight="150" MinWidth="800">
     <Window.DataContext>
         <view:MainViewModel />
     </Window.DataContext>
@@ -19,7 +19,7 @@
             <RowDefinition Height="30px" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Grid Row="0" Column="0">
+        <Grid Grid.Row="0" Grid.Column="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
@@ -35,13 +35,13 @@
             <Button Grid.Row="0" Grid.Column="1" Command="{Binding ConfigsClick}">Configs</Button>
             <Button Grid.Row="0" Grid.Column="2" Command="{Binding ActivitiesClick}">Activities</Button>
             <Button Grid.Row="0" Grid.Column="3" Command="{Binding LobbiesClick}">Lobbies</Button>
-            <Button Grid.Row="0" Grid.Column="5">Delete</Button>
-            <Button Grid.Row="0" Grid.Column="6">Duplicate</Button>
-            <Button Grid.Row="0" Grid.Column="7">Up</Button>
-            <Button Grid.Row="0" Grid.Column="8">Down</Button>
+            <Button Grid.Row="0" Grid.Column="5" Command="{Binding DeleteClick}">🗑️</Button>
+            <Button Grid.Row="0" Grid.Column="6" Command="{Binding DuplicateClick}">⎘</Button>
+            <Button Grid.Row="0" Grid.Column="7" Command="{Binding UpClick}">▲</Button>
+            <Button Grid.Row="0" Grid.Column="8" Command="{Binding DownClick}">▼</Button>
         </Grid>
 
-        <ListView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Path=List}">
+        <ListView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Path=List}" SelectionMode="Single" SelectedIndex="{Binding SelectedIndex}"  SelectedItem="{Binding Selected}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -50,6 +50,138 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        
+<Grid Grid.Column="1" Grid.Row="1">
+            <Grid Visibility="{Binding LobbyVisibility}" >
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid DataContext="{Binding SelectedLobby}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30px"/>
+                            <RowDefinition Height="30px"/>
+                            <RowDefinition Height="30px"/>
+                            <RowDefinition Height="30px"/>
+                            <RowDefinition Height="30px"/>
+                            <RowDefinition Height="30px"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="0" >Name</Label>
+                        <TextBox Grid.Row="0" Grid.Column="1"  Text="{Binding Name}"></TextBox>
+                        <Label Grid.Row="1" Grid.Column="0" >Capacity</Label>
+                        <TextBox Grid.Row="1" Grid.Column="1"  Text="{Binding Capacity}"></TextBox>
+                        <Label Grid.Row="2" Grid.Column="0" >Locked</Label>
+                        <TextBox Grid.Row="2" Grid.Column="1"  Text="{Binding Locked}"></TextBox>
+                        <Label Grid.Row="3" Grid.Column="0" >Type</Label>
+                        <TextBox Grid.Row="3" Grid.Column="1"  Text="{Binding Type}"></TextBox>
+                        <Label Grid.Row="4" Grid.Column="0" >OwnerId</Label>
+                        <TextBox Grid.Row="4" Grid.Column="1"  Text="{Binding OwnerId}"></TextBox>
+                        <Label Grid.Row="5" Grid.Column="0" >Metadata</Label>
+                        <TextBox Grid.Row="5" Grid.Column="1"  Text="{Binding Metadata}"></TextBox>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
+        <Grid  Visibility="{Binding ActivityVisibility}" >
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid DataContext="{Binding SelectedActivity}" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30px"/>
+                            <RowDefinition Height="30px"/>
+                            <RowDefinition Height="30px"/>
+                            <RowDefinition Height="30px"/>
+                            <RowDefinition Height="30px"/>
+                            <RowDefinition Height="30px"/>
+                            <RowDefinition Height="30px"/>
+                            <RowDefinition Height="30px"/>
+                            <RowDefinition Height="30px"/>
+                            <RowDefinition Height="30px"/>
+                            <RowDefinition Height="30px"/>
+                            <RowDefinition Height="30px"/>
+                            <RowDefinition Height="30px"/>
+                            <RowDefinition Height="30px"/>
+                            <RowDefinition Height="30px"/>
+                            <RowDefinition Height="30px"/>
+                            <RowDefinition Height="30px"/>
+                            <RowDefinition Height="30px"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="0" >Name</Label>
+                        <TextBox Grid.Row="0" Grid.Column="1"  Text="{Binding Name}"></TextBox>
+                        <Label Grid.Row="1" Grid.Column="0" >Name</Label>
+                        <TextBox Grid.Row="1" Grid.Column="1"  Text="{Binding Name}"></TextBox>
+                        <Label Grid.Row="2" Grid.Column="0" >Name</Label>
+                        <TextBox Grid.Row="2" Grid.Column="1"  Text="{Binding Name}"></TextBox>
+                        <Label Grid.Row="3" Grid.Column="0" >Name</Label>
+                        <TextBox Grid.Row="3" Grid.Column="1"  Text="{Binding Name}"></TextBox>
+                        <Label Grid.Row="4" Grid.Column="0" >Name</Label>
+                        <TextBox Grid.Row="4" Grid.Column="1"  Text="{Binding Name}"></TextBox>
+                        <Label Grid.Row="5" Grid.Column="0" >Name</Label>
+                        <TextBox Grid.Row="5" Grid.Column="1"  Text="{Binding Name}"></TextBox>
+                        <Label Grid.Row="6" Grid.Column="0" >Name</Label>
+                        <TextBox Grid.Row="6" Grid.Column="1"  Text="{Binding Name}"></TextBox>
+                        <Label Grid.Row="7" Grid.Column="0" >Name</Label>
+                        <TextBox Grid.Row="7" Grid.Column="1"  Text="{Binding Name}"></TextBox>
+                        <Label Grid.Row="8" Grid.Column="0" >Name</Label>
+                        <TextBox Grid.Row="8" Grid.Column="1"  Text="{Binding Name}"></TextBox>
+                        <Label Grid.Row="9" Grid.Column="0" >Name</Label>
+                        <TextBox Grid.Row="9" Grid.Column="1"  Text="{Binding Name}"></TextBox>
+                        <Label Grid.Row="10" Grid.Column="0" >Name</Label>
+                        <TextBox Grid.Row="10" Grid.Column="1"  Text="{Binding Name}"></TextBox>
+                        <Label Grid.Row="11" Grid.Column="0" >Name</Label>
+                        <TextBox Grid.Row="11" Grid.Column="1"  Text="{Binding Name}"></TextBox>
+                        <Label Grid.Row="12" Grid.Column="0" >Name</Label>
+                        <TextBox Grid.Row="12" Grid.Column="1"  Text="{Binding Name}"></TextBox>
+                        <Label Grid.Row="13" Grid.Column="0" >Name</Label>
+                        <TextBox Grid.Row="13" Grid.Column="1"  Text="{Binding Name}"></TextBox>
+                        <Label Grid.Row="14" Grid.Column="0" >Name</Label>
+                        <TextBox Grid.Row="14" Grid.Column="1"  Text="{Binding Name}"></TextBox>
+                        <Label Grid.Row="15" Grid.Column="0" >Name</Label>
+                        <TextBox Grid.Row="15" Grid.Column="1"  Text="{Binding Name}"></TextBox>
+                        <Label Grid.Row="16" Grid.Column="0" >Name</Label>
+                        <TextBox Grid.Row="16" Grid.Column="1"  Text="{Binding Name}"></TextBox>
+                        <Label Grid.Row="17" Grid.Column="0" >Name</Label>
+                        <TextBox Grid.Row="17" Grid.Column="1"  Text="{Binding Name}"></TextBox>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
+        <Grid  Visibility="{Binding ConfigVisibility}" >
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <Grid DataContext="{Binding SelectedConfig}" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30px"/>
+                    <RowDefinition Height="30px"/>
+                    <RowDefinition Height="30px"/>
+                    <RowDefinition Height="30px"/>
+                    <RowDefinition Height="30px"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" >Name</Label>
+                <TextBox Grid.Row="0" Grid.Column="1"  Text="{Binding Name}"></TextBox>
+                <Label Grid.Row="1" Grid.Column="0" >Name</Label>
+                <TextBox Grid.Row="1" Grid.Column="1"  Text="{Binding Name}"></TextBox>
+                <Label Grid.Row="2" Grid.Column="0" >Name</Label>
+                <TextBox Grid.Row="2" Grid.Column="1"  Text="{Binding Name}"></TextBox>
+                <Label Grid.Row="3" Grid.Column="0" >Name</Label>
+                <TextBox Grid.Row="3" Grid.Column="1"  Text="{Binding Name}"></TextBox>
+                <Label Grid.Row="4" Grid.Column="0" >Name</Label>
+                <TextBox Grid.Row="4" Grid.Column="1"  Text="{Binding Name}"></TextBox>
+            </Grid>
+            </ScrollViewer>
+            </Grid>
+</Grid>
     </Grid>
 
 
