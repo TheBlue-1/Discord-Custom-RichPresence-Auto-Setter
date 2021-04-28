@@ -3,16 +3,41 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 #endregion
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.Utils {
-	public class GeneralizedObservableList<T1, T2> : ObservableCollection<T1>, IList<T2>, IList, IReadOnlyList<T2>
+	public sealed class GeneralizedObservableList<T1, T2> : ObservableCollection<T1>, IList<T2>, IList, IReadOnlyList<T2>
 		where T2 : T1 {
 		public bool IsReadOnly { get; } = false;
 
 		public new T2 this[int index] {
 			get => (T2)base[index];
 			set => base[index] = value;
+		}
+
+		public GeneralizedObservableList() => CollectionChanged += CollectionChangedHandler;
+
+		public event PropertyChangedEventHandler InnerPropertyChanged;
+
+		private void CollectionChangedHandler(object sender, NotifyCollectionChangedEventArgs e) {
+			if (e.OldItems != null) {
+				foreach (INotifyPropertyChanged item in e.OldItems) {
+					item.PropertyChanged -= InnerPropertyChangedHandler;
+				}
+			}
+			if (e.NewItems == null) {
+				return;
+			}
+
+			foreach (INotifyPropertyChanged item in e.NewItems) {
+				item.PropertyChanged += InnerPropertyChangedHandler;
+			}
+		}
+
+		private void InnerPropertyChangedHandler(object sender, PropertyChangedEventArgs e) {
+			InnerPropertyChanged?.Invoke(sender, e);
 		}
 
 		public void Add(T2 item) {

@@ -1,16 +1,13 @@
 ﻿#region
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using GameSDK.GameSDK;
 #endregion
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
-	public class Lobby : IListable, INotifyPropertyChanged {
+	public class Lobby : ListableBase {
 		private uint _capacity;
 		private bool _locked;
 		private Dictionary<string, string> _metadata;
-		private string _name;
 		private long _ownerId;
 		private LobbyType _type;
 		public static Lobby DefaultLobby => new("Default Lobby", 2, true, LobbyType.Private, 0, new Dictionary<string, string>());
@@ -35,13 +32,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 				OnPropertyChanged();
 			}
 		}
-		public string Name {
-			get => _name;
-			set {
-				_name = value;
-				OnPropertyChanged();
-			}
-		}
+
 		public long OwnerId {
 			get => _ownerId;
 			set {
@@ -57,8 +48,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 			}
 		}
 
-		public Lobby(string name, uint capacity, bool locked, LobbyType type, long ownerId, Dictionary<string, string> metadata) {
-			Name = name;
+		public Lobby(string name, uint capacity, bool locked, LobbyType type, long ownerId, Dictionary<string, string> metadata) : base(name) {
 			Capacity = capacity;
 			Locked = locked;
 			Type = type;
@@ -66,8 +56,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 			Metadata = metadata;
 		}
 
-		public Lobby(Lobby lobby) {
-			Name = lobby.Name;
+		public Lobby(Lobby lobby) : base(lobby.Name) {
 			Capacity = lobby.Capacity;
 			Locked = lobby.Locked;
 			Type = lobby.Type;
@@ -75,12 +64,6 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 			Metadata = lobby.Metadata;
 		}
 
-		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-		}
-
-		public IListable Duplicate() => new Lobby(this);
-
-		public event PropertyChangedEventHandler PropertyChanged;
+		public override IListable Duplicate() => new Lobby(this);
 	}
 }

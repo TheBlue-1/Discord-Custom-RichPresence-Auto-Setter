@@ -1,11 +1,9 @@
 ﻿#region
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using GameSDK.GameSDK;
 #endregion
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
-	public class Activity : IListable, INotifyPropertyChanged {
+	public class Activity : ListableBase {
 		private ActivityType _activityType;
 		private long _applicationId;
 		private int _currentPartySize;
@@ -17,7 +15,6 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 		private string _largeText;
 		private string _matchSecret;
 		private int _maxPartySize;
-		private string _name;
 		private string _partyId;
 		private string _smallImage;
 		private string _smallText;
@@ -105,13 +102,6 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 			}
 		}
 
-		public string Name {
-			get => _name;
-			set {
-				_name = value;
-				OnPropertyChanged();
-			}
-		}
 		public string PartyId {
 			get => _partyId;
 			set {
@@ -157,8 +147,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 
 		public Activity(string name, string state, string details, bool instance, long applicationId, ActivityType activityType, long startTimestamp,
 			long endTimestamp, string largeImage, string largeText, string smallImage, string smallText, string matchSecret, string joinSecret,
-			string spectateSecret, string partyId, int maxPartySize, int currentPartySize) {
-			Name = name;
+			string spectateSecret, string partyId, int maxPartySize, int currentPartySize) : base(name) {
 			State = state;
 			Details = details;
 			Instance = instance;
@@ -178,8 +167,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 			CurrentPartySize = currentPartySize;
 		}
 
-		public Activity(Activity activity) {
-			Name = activity.Name;
+		public Activity(Activity activity) : base(activity.Name) {
 			State = activity.State;
 			Details = activity.Details;
 			Instance = activity.Instance;
@@ -199,12 +187,6 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 			CurrentPartySize = activity.CurrentPartySize;
 		}
 
-		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-		}
-
-		public IListable Duplicate() => new Activity(this);
-
-		public event PropertyChangedEventHandler PropertyChanged;
+		public override IListable Duplicate() => new Activity(this);
 	}
 }
