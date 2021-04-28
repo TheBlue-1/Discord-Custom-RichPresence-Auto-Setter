@@ -24,6 +24,8 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Utils {
 			}
 		}
 
+		public bool JsonFileExists(string filename) => File.Exists(Path.Combine(ApplicationFolderPath, filename + JsonFileEnding));
+
 		public async Task<T> ReadJsonFromFile<T>(string fileName)
 			where T : new() {
 			return await Task.Run(() => {

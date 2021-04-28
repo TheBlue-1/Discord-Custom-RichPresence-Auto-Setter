@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:view="clr-namespace:Discord_Custom_Rich_Presence_Auto_Setter.View"
         mc:Ignorable="d"
-        Title="Discord Rich-Presence Setter" MinHeight="150" MinWidth="800">
+        Title="Discord Rich-Presence Setter" MinHeight="150" MinWidth="850">
     <Window.DataContext>
         <view:MainViewModel />
     </Window.DataContext>
@@ -30,15 +30,19 @@
                 <ColumnDefinition Width="0.5*" />
                 <ColumnDefinition Width="0.5*" />
                 <ColumnDefinition Width="0.5*" />
+                <ColumnDefinition Width="0.5*" />
             </Grid.ColumnDefinitions>
             <Button Grid.Row="0" Grid.Column="0" Command="{Binding AppClick}">App</Button>
             <Button Grid.Row="0" Grid.Column="1" Command="{Binding ConfigsClick}">Configs</Button>
             <Button Grid.Row="0" Grid.Column="2" Command="{Binding ActivitiesClick}">Activities</Button>
             <Button Grid.Row="0" Grid.Column="3" Command="{Binding LobbiesClick}">Lobbies</Button>
-            <Button Grid.Row="0" Grid.Column="5" Command="{Binding DeleteClick}">🗑️</Button>
-            <Button Grid.Row="0" Grid.Column="6" Command="{Binding DuplicateClick}">⎘</Button>
-            <Button Grid.Row="0" Grid.Column="7" Command="{Binding UpClick}">▲</Button>
-            <Button Grid.Row="0" Grid.Column="8" Command="{Binding DownClick}">▼</Button>
+            <Button Grid.Row="0" Grid.Column="5" Command="{Binding AddClick}">+</Button>
+
+            <Button Grid.Row="0" Grid.Column="6" Command="{Binding DeleteClick}">🗑️</Button>
+
+            <Button Grid.Row="0" Grid.Column="7" Command="{Binding DuplicateClick}">⎘</Button>
+            <Button Grid.Row="0" Grid.Column="8" Command="{Binding UpClick}">▲</Button>
+            <Button Grid.Row="0" Grid.Column="9" Command="{Binding DownClick}">▼</Button>
         </Grid>
 
         <ListView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Path=List}" SelectionMode="Single"

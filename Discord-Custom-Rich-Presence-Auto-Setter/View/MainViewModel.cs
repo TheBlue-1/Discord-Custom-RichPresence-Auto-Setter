@@ -12,21 +12,30 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.View {
 		private ObservableCollection<IListable> _list;
 		private IListable _selected;
 
-		private GeneralizedObservableList<IListable, Activity> Activities { get; } = new();
-		public RelayCommand ActivitiesClick => new(() => { List = Activities; }, () => List != Activities);
+		public RelayCommand ActivitiesClick => new(() => { List = Data.Activities; }, () => List != Data.Activities);
 		public Visibility ActivityVisibility => SelectedActivity == null ? Visibility.Hidden : Visibility.Visible;
+		public RelayCommand AddClick => new(() => {
+			if (List == Data.Configs) {
+				Data.Configs.Add(Config.DefaultConfig);
+			} else if (List == Data.Activities) {
+				Data.Activities.Add(Activity.DefaultActivity);
+			} else if (List == Data.Lobbies) {
+				Data.Lobbies.Add(Lobby.DefaultLobby);
+			}
+		}, () => List != App);
 		private ObservableCollection<IListable> App { get; } = new();
 
 		public RelayCommand AppClick => new(() => { List = App; }, () => List != App);
 
-		private GeneralizedObservableList<IListable, Config> Configs { get; } = new();
-		public RelayCommand ConfigsClick => new(() => { List = Configs; }, () => List != Configs);
+		public RelayCommand ConfigsClick => new(() => { List = Data.Configs; }, () => List != Data.Configs);
 		public Visibility ConfigVisibility => SelectedConfig == null ? Visibility.Hidden : Visibility.Visible;
+
+		private FileSyncedConfigs Data { get; } = new("data");
 		public RelayCommand DeleteClick => new(() => { List.Remove(Selected); }, () => Selected != null);
+
 		public RelayCommand DownClick => new(() => { List.Move(SelectedIndex, SelectedIndex + 1); }, () => Selected != null && SelectedIndex < List.Count - 1);
 		public RelayCommand DuplicateClick => new(() => { List.Insert(SelectedIndex + 1, Selected.Duplicate()); }, () => Selected != null);
-		private GeneralizedObservableList<IListable, Lobby> Lobbies { get; } = new();
-		public RelayCommand LobbiesClick => new(() => { List = Lobbies; }, () => List != Lobbies);
+		public RelayCommand LobbiesClick => new(() => { List = Data.Lobbies; }, () => List != Data.Lobbies);
 
 		public Visibility LobbyVisibility => SelectedLobby == null ? Visibility.Hidden : Visibility.Visible;
 
@@ -58,16 +67,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.View {
 		}
 		public int SelectedIndex { get; set; }
 
-		public MainViewModel() {
-			List = App;
-			LoadTestData();
-		}
-
-		private void LoadTestData() {
-			Activities.Add(Activity.DefaultActivity);
-			Lobbies.Add(Lobby.DefaultLobby);
-			Configs.Add(Config.DefaultConfig);
-		}
+		public MainViewModel() => List = App;
 
 		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

@@ -56,8 +56,8 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 				Details = activity.Details,
 				Timestamps = { Start = activity.StartTimestamp, End = activity.EndTimestamp },
 				Assets = { LargeImage = activity.LargeImage, LargeText = activity.LargeText, SmallImage = activity.SmallImage, SmallText = activity.SmallText },
-				Party = { Id = activity.PartyId, Size = { CurrentSize = activity.CurrentPartySize, MaxSize = activity.MaxPartySize } },
-				Secrets = { Join = activity.JoinSecret, Spectate = activity.SpectateSecret, Match = activity.MatchSecret }
+				Party = { Id = dcLobby.Id.ToString(), Size = { CurrentSize = LobbyManager.MemberCount(dcLobby.Id), MaxSize = (int)dcLobby.Capacity } },
+				Secrets = { Join = LobbyManager.GetLobbyActivitySecret(dcLobby.Id) }
 			};
 			TaskCompletionSource<object> tcs = new();
 			ActivityManager.UpdateActivity(dcActivity, result => {
