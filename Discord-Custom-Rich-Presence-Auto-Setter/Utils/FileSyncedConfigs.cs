@@ -1,7 +1,10 @@
 ﻿#region
+using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Discord_Custom_Rich_Presence_Auto_Setter.Models;
 using Discord_Custom_Rich_Presence_Auto_Setter.Utils.Extensions;
@@ -9,13 +12,14 @@ using Discord_Custom_Rich_Presence_Auto_Setter.Utils.Extensions;
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.Utils {
 	public class FileSyncedConfigs {
-		private readonly string _directoryName;
 		public GeneralizedObservableList<IListable, Activity> Activities { get; }
-		private string ActivitiesFileName => Path.Combine(_directoryName, "activities");
+		private const string ActivitiesFileName = "activities";
 		public GeneralizedObservableList<IListable, Config> Configs { get; }
-		private string ConfigsFileName => Path.Combine(_directoryName, "configs");
+		private const string ConfigsFileName = "configs";
 		public GeneralizedObservableList<IListable, Lobby> Lobbies { get; }
-		private string LobbiesFileName => Path.Combine(_directoryName, "lobbies");
+		private IEnumerable<Lobby> EnumerableLobbies => Lobbies;
+		private IEnumerable<Activity> EnumerableActivities => Activities;
+		private const string LobbiesFileName = "lobbies";
 		private object SaveActivitiesLock { get; } = new();
 		private object SaveConfigsLock { get; } = new();
 		private object SaveLobbiesLock { get; } = new();
@@ -27,8 +31,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Utils {
 		private bool SaveLobbiesAgain { get; set; }
 		private bool SaveLobbiesRunning { get; set; }
 
-		public FileSyncedConfigs(string directoryName) {
-			_directoryName = directoryName;
+		public FileSyncedConfigs() {
 			Configs = FileService.Instance.JsonFileExists(ConfigsFileName) ? LoadConfigs().WaitForResult() : new GeneralizedObservableList<IListable, Config>();
 			Lobbies = FileService.Instance.JsonFileExists(ConfigsFileName) ? LoadLobbies().WaitForResult() : new GeneralizedObservableList<IListable, Lobby>();
 			Activities = FileService.Instance.JsonFileExists(ConfigsFileName)
@@ -61,10 +64,18 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Utils {
 		private async Task<GeneralizedObservableList<IListable, Activity>> LoadActivities() =>
 			await FileService.Instance.ReadJsonFromFile<GeneralizedObservableList<IListable, Activity>>(ActivitiesFileName);
 
-		private async Task<GeneralizedObservableList<IListable, Config>> LoadConfigs() =>
+		private async Task<GeneralizedObservableList<IListable, Config>> LoadConfigs() {
+			if (Lobbies == null || Activities == null) {
+				throw new InvalidOperationException("Lobbies and activities must be loaded before configs");
+			}
+			GeneralizedObservableList<IListable, Config> configs= await FileService.Instance.ReadJsonFromFile<GeneralizedObservableList<IListable, Config>>(ConfigsFileName);
+			foreach (Config config in configs) {
+				config.Lobby = EnumerableLobbies.FirstOrDefault(lobby => lobby.Uuid == config.LobbyId);
+				config.Activity = EnumerableActivities.FirstOrDefault(activity => activity.Uuid == config.LobbyId);
 
-			//will currently load lobbies and activities in a bad way
-			await FileService.Instance.ReadJsonFromFile<GeneralizedObservableList<IListable, Config>>(ConfigsFileName);
+			}
+			return configs;
+		}
 
 		private async Task<GeneralizedObservableList<IListable, Lobby>> LoadLobbies() =>
 			await FileService.Instance.ReadJsonFromFile<GeneralizedObservableList<IListable, Lobby>>(LobbiesFileName);
@@ -107,7 +118,6 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Utils {
 				SaveConfigsRunning = true;
 			}
 			while (true) {
-				//will currently save lobbies and activities in a bad way
 				await FileService.Instance.SaveJsonToFile(ConfigsFileName, Configs);
 				lock (SaveConfigsLock) {
 					if (SaveConfigsAgain) {

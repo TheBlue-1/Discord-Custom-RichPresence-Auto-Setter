@@ -7,9 +7,12 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.View {
 	///     Interaction logic for MainWindow.xaml
 	/// </summary>
 	public partial class MainWindow {
-		public MainWindow() {
+		public MainWindow()
+		{
+
+			RichPresenceManager.Init(App.Settings.DefaultApplicationId);
+
 			InitializeComponent();
-			RichPresenceManager.Init(793125319657783306);
 		}
 	}
 }

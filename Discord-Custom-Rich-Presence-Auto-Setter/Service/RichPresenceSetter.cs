@@ -69,10 +69,13 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 			await tcs.Task;
 		}
 
+		public event Action GameLoopEnded;
+
 		public async Task UpdatePeriodically(TimeSpan time) {
 			while (true) {
 				await Task.Delay(time);
 				Discord.RunCallbacks();
+				GameLoopEnded?.Invoke();
 			}
 
 			// ReSharper disable once FunctionNeverReturns

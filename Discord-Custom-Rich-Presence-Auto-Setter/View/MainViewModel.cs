@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using Discord_Custom_Rich_Presence_Auto_Setter.Models;
+using Discord_Custom_Rich_Presence_Auto_Setter.Service;
 using Discord_Custom_Rich_Presence_Auto_Setter.Utils;
 #endregion
 
@@ -30,7 +31,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.View {
 		public RelayCommand ConfigsClick => new(() => { List = Data.Configs; }, () => List != Data.Configs);
 		public Visibility ConfigVisibility => SelectedConfig == null ? Visibility.Hidden : Visibility.Visible;
 
-		private FileSyncedConfigs Data { get; } = new("data");
+		private FileSyncedConfigs Data { get; } = RichPresenceManager.Instance.Configs;
 		public RelayCommand DeleteClick => new(() => { List.Remove(Selected); }, () => Selected != null);
 
 		public RelayCommand DownClick => new(() => { List.Move(SelectedIndex, SelectedIndex + 1); }, () => Selected != null && SelectedIndex < List.Count - 1);

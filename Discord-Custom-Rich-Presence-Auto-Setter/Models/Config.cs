@@ -2,6 +2,7 @@
 using System;
 using System.Collections.ObjectModel;
 using Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements;
+using Newtonsoft.Json;
 #endregion
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
@@ -14,6 +15,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 		private ObservableCollection<Requirement> _requirements;
 		public static Config DefaultConfig =>
 			new("Default Config", Activity.DefaultActivity, Lobby.DefaultLobby, new ObservableCollection<Requirement>(), null);
+		[JsonIgnore]
 		public Activity Activity {
 			get => _activity;
 			set {
@@ -36,6 +38,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 				OnPropertyChanged();
 			}
 		}
+		[JsonIgnore]
 		public Lobby Lobby {
 			get => _lobby;
 			set {
