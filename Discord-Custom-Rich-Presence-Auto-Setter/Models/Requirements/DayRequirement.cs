@@ -50,6 +50,14 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements {
 			}
 		}
 
+		public DayRequirement(DayRequirement dayRequirement) {
+			WeekDay = dayRequirement.WeekDay;
+		MinDate	=dayRequirement.MinDate;
+		DateEquality	=dayRequirement.DateEquality;
+		MaxDate	=dayRequirement.MaxDate;
+		ShouldBeMet	=dayRequirement.ShouldBeMet;
+		}
+
 		//isMonday,is equal date usw
 		public DayOfWeek? WeekDay {
 			get => _weekDay;

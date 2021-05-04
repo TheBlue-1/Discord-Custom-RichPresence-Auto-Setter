@@ -425,10 +425,10 @@ namespace GameSDK.GameSDK
             internal delegate Result SetCapacityMethod(IntPtr methodsPtr, UInt32 capacity);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate Result SetMetadataMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)]string key, [MarshalAs(UnmanagedType.LPStr)]string value);
+            internal delegate Result SetMetadataMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)] string key, [MarshalAs(UnmanagedType.LPStr)] string value);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate Result DeleteMetadataMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)]string key);
+            internal delegate Result DeleteMetadataMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)] string key);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
             internal delegate Result SetLockedMethod(IntPtr methodsPtr, bool locked);
@@ -543,10 +543,10 @@ namespace GameSDK.GameSDK
         internal partial struct FFIMethods
         {
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate Result SetMetadataMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)]string key, [MarshalAs(UnmanagedType.LPStr)]string value);
+            internal delegate Result SetMetadataMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)] string key, [MarshalAs(UnmanagedType.LPStr)] string value);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate Result DeleteMetadataMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)]string key);
+            internal delegate Result DeleteMetadataMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)] string key);
 
             internal SetMetadataMethod SetMetadata;
 
@@ -602,10 +602,10 @@ namespace GameSDK.GameSDK
         internal partial struct FFIMethods
         {
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate Result FilterMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)]string key, LobbySearchComparison comparison, LobbySearchCast cast, [MarshalAs(UnmanagedType.LPStr)]string value);
+            internal delegate Result FilterMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)] string key, LobbySearchComparison comparison, LobbySearchCast cast, [MarshalAs(UnmanagedType.LPStr)] string value);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate Result SortMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)]string key, LobbySearchCast cast, [MarshalAs(UnmanagedType.LPStr)]string value);
+            internal delegate Result SortMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)] string key, LobbySearchCast cast, [MarshalAs(UnmanagedType.LPStr)] string value);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
             internal delegate Result LimitMethod(IntPtr methodsPtr, UInt32 limit);
@@ -715,7 +715,7 @@ namespace GameSDK.GameSDK
             internal delegate Result RunCallbacksMethod(IntPtr methodsPtr);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate void SetLogHookCallback(IntPtr ptr, LogLevel level, [MarshalAs(UnmanagedType.LPStr)]string message);
+            internal delegate void SetLogHookCallback(IntPtr ptr, LogLevel level, [MarshalAs(UnmanagedType.LPStr)] string message);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
             internal delegate void SetLogHookMethod(IntPtr methodsPtr, LogLevel minLevel, IntPtr callbackData, SetLogHookCallback callback);
@@ -1041,8 +1041,9 @@ namespace GameSDK.GameSDK
             Marshal.FreeHGlobal(StoreEventsPtr);
             Marshal.FreeHGlobal(VoiceEventsPtr);
             Marshal.FreeHGlobal(AchievementEventsPtr);
-            if (setLogHook.HasValue) {
-               setLogHook.Value.Free();
+            if (setLogHook.HasValue)
+            {
+                setLogHook.Value.Free();
             }
         }
 
@@ -1055,6 +1056,7 @@ namespace GameSDK.GameSDK
             }
         }
 
+        private static readonly FFIMethods.SetLogHookCallback SetLogHookCallbackDelegate = SetLogHookCallbackImpl;
         [MonoPInvokeCallback]
         private static void SetLogHookCallbackImpl(IntPtr ptr, LogLevel level, string message)
         {
@@ -1065,16 +1067,18 @@ namespace GameSDK.GameSDK
 
         public void SetLogHook(LogLevel minLevel, SetLogHookHandler callback)
         {
-            if (setLogHook.HasValue) {
-               setLogHook.Value.Free();
+            if (setLogHook.HasValue)
+            {
+                setLogHook.Value.Free();
             }
-             setLogHook = GCHandle.Alloc(callback);
-            Methods.SetLogHook(MethodsPtr, minLevel, GCHandle.ToIntPtr(setLogHook.Value), SetLogHookCallbackImpl);
+            setLogHook = GCHandle.Alloc(callback);
+            Methods.SetLogHook(MethodsPtr, minLevel, GCHandle.ToIntPtr(setLogHook.Value), SetLogHookCallbackDelegate);
         }
 
         public ApplicationManager GetApplicationManager()
         {
-            if (ApplicationManagerInstance == null) {
+            if (ApplicationManagerInstance == null)
+            {
                 ApplicationManagerInstance = new ApplicationManager(
                   Methods.GetApplicationManager(MethodsPtr),
                   ApplicationEventsPtr,
@@ -1086,7 +1090,8 @@ namespace GameSDK.GameSDK
 
         public UserManager GetUserManager()
         {
-            if (UserManagerInstance == null) {
+            if (UserManagerInstance == null)
+            {
                 UserManagerInstance = new UserManager(
                   Methods.GetUserManager(MethodsPtr),
                   UserEventsPtr,
@@ -1098,7 +1103,8 @@ namespace GameSDK.GameSDK
 
         public ImageManager GetImageManager()
         {
-            if (ImageManagerInstance == null) {
+            if (ImageManagerInstance == null)
+            {
                 ImageManagerInstance = new ImageManager(
                   Methods.GetImageManager(MethodsPtr),
                   ImageEventsPtr,
@@ -1110,7 +1116,8 @@ namespace GameSDK.GameSDK
 
         public ActivityManager GetActivityManager()
         {
-            if (ActivityManagerInstance == null) {
+            if (ActivityManagerInstance == null)
+            {
                 ActivityManagerInstance = new ActivityManager(
                   Methods.GetActivityManager(MethodsPtr),
                   ActivityEventsPtr,
@@ -1122,7 +1129,8 @@ namespace GameSDK.GameSDK
 
         public RelationshipManager GetRelationshipManager()
         {
-            if (RelationshipManagerInstance == null) {
+            if (RelationshipManagerInstance == null)
+            {
                 RelationshipManagerInstance = new RelationshipManager(
                   Methods.GetRelationshipManager(MethodsPtr),
                   RelationshipEventsPtr,
@@ -1134,7 +1142,8 @@ namespace GameSDK.GameSDK
 
         public LobbyManager GetLobbyManager()
         {
-            if (LobbyManagerInstance == null) {
+            if (LobbyManagerInstance == null)
+            {
                 LobbyManagerInstance = new LobbyManager(
                   Methods.GetLobbyManager(MethodsPtr),
                   LobbyEventsPtr,
@@ -1146,7 +1155,8 @@ namespace GameSDK.GameSDK
 
         public NetworkManager GetNetworkManager()
         {
-            if (NetworkManagerInstance == null) {
+            if (NetworkManagerInstance == null)
+            {
                 NetworkManagerInstance = new NetworkManager(
                   Methods.GetNetworkManager(MethodsPtr),
                   NetworkEventsPtr,
@@ -1158,7 +1168,8 @@ namespace GameSDK.GameSDK
 
         public OverlayManager GetOverlayManager()
         {
-            if (OverlayManagerInstance == null) {
+            if (OverlayManagerInstance == null)
+            {
                 OverlayManagerInstance = new OverlayManager(
                   Methods.GetOverlayManager(MethodsPtr),
                   OverlayEventsPtr,
@@ -1170,7 +1181,8 @@ namespace GameSDK.GameSDK
 
         public StorageManager GetStorageManager()
         {
-            if (StorageManagerInstance == null) {
+            if (StorageManagerInstance == null)
+            {
                 StorageManagerInstance = new StorageManager(
                   Methods.GetStorageManager(MethodsPtr),
                   StorageEventsPtr,
@@ -1182,7 +1194,8 @@ namespace GameSDK.GameSDK
 
         public StoreManager GetStoreManager()
         {
-            if (StoreManagerInstance == null) {
+            if (StoreManagerInstance == null)
+            {
                 StoreManagerInstance = new StoreManager(
                   Methods.GetStoreManager(MethodsPtr),
                   StoreEventsPtr,
@@ -1194,7 +1207,8 @@ namespace GameSDK.GameSDK
 
         public VoiceManager GetVoiceManager()
         {
-            if (VoiceManagerInstance == null) {
+            if (VoiceManagerInstance == null)
+            {
                 VoiceManagerInstance = new VoiceManager(
                   Methods.GetVoiceManager(MethodsPtr),
                   VoiceEventsPtr,
@@ -1206,7 +1220,8 @@ namespace GameSDK.GameSDK
 
         public AchievementManager GetAchievementManager()
         {
-            if (AchievementManagerInstance == null) {
+            if (AchievementManagerInstance == null)
+            {
                 AchievementManagerInstance = new AchievementManager(
                   Methods.GetAchievementManager(MethodsPtr),
                   AchievementEventsPtr,
@@ -1252,7 +1267,7 @@ namespace GameSDK.GameSDK
             internal delegate void GetOAuth2TokenMethod(IntPtr methodsPtr, IntPtr callbackData, GetOAuth2TokenCallback callback);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate void GetTicketCallback(IntPtr ptr, Result result, [MarshalAs(UnmanagedType.LPStr)]ref string data);
+            internal delegate void GetTicketCallback(IntPtr ptr, Result result, [MarshalAs(UnmanagedType.LPStr)] ref string data);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
             internal delegate void GetTicketMethod(IntPtr methodsPtr, IntPtr callbackData, GetTicketCallback callback);
@@ -1293,12 +1308,14 @@ namespace GameSDK.GameSDK
 
         internal ApplicationManager(IntPtr ptr, IntPtr eventsPtr, ref FFIEvents events)
         {
-            if (eventsPtr == IntPtr.Zero) {
+            if (eventsPtr == IntPtr.Zero)
+            {
                 throw new ResultException(Result.InternalError);
             }
             InitEvents(eventsPtr, ref events);
             MethodsPtr = ptr;
-            if (MethodsPtr == IntPtr.Zero) {
+            if (MethodsPtr == IntPtr.Zero)
+            {
                 throw new ResultException(Result.InternalError);
             }
         }
@@ -1308,6 +1325,7 @@ namespace GameSDK.GameSDK
             Marshal.StructureToPtr(events, eventsPtr, false);
         }
 
+        private static readonly FFIMethods.ValidateOrExitCallback ValidateOrExitCallbackDelegate = ValidateOrExitCallbackImpl;
         [MonoPInvokeCallback]
         private static void ValidateOrExitCallbackImpl(IntPtr ptr, Result result)
         {
@@ -1320,7 +1338,7 @@ namespace GameSDK.GameSDK
         public void ValidateOrExit(ValidateOrExitHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.ValidateOrExit(MethodsPtr, GCHandle.ToIntPtr(wrapped), ValidateOrExitCallbackImpl);
+            Methods.ValidateOrExit(MethodsPtr, GCHandle.ToIntPtr(wrapped), ValidateOrExitCallbackDelegate);
         }
 
         public string GetCurrentLocale()
@@ -1337,6 +1355,7 @@ namespace GameSDK.GameSDK
             return ret.ToString();
         }
 
+        private static readonly FFIMethods.GetOAuth2TokenCallback GetOAuth2TokenCallbackDelegate = GetOAuth2TokenCallbackImpl;
         [MonoPInvokeCallback]
         private static void GetOAuth2TokenCallbackImpl(IntPtr ptr, Result result, ref OAuth2Token oauth2Token)
         {
@@ -1349,9 +1368,10 @@ namespace GameSDK.GameSDK
         public void GetOAuth2Token(GetOAuth2TokenHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.GetOAuth2Token(MethodsPtr, GCHandle.ToIntPtr(wrapped), GetOAuth2TokenCallbackImpl);
+            Methods.GetOAuth2Token(MethodsPtr, GCHandle.ToIntPtr(wrapped), GetOAuth2TokenCallbackDelegate);
         }
 
+        private static readonly FFIMethods.GetTicketCallback GetTicketCallbackDelegate = GetTicketCallbackImpl;
         [MonoPInvokeCallback]
         private static void GetTicketCallbackImpl(IntPtr ptr, Result result, ref string data)
         {
@@ -1364,7 +1384,7 @@ namespace GameSDK.GameSDK
         public void GetTicket(GetTicketHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.GetTicket(MethodsPtr, GCHandle.ToIntPtr(wrapped), GetTicketCallbackImpl);
+            Methods.GetTicket(MethodsPtr, GCHandle.ToIntPtr(wrapped), GetTicketCallbackDelegate);
         }
     }
 
@@ -1431,19 +1451,21 @@ namespace GameSDK.GameSDK
 
         internal UserManager(IntPtr ptr, IntPtr eventsPtr, ref FFIEvents events)
         {
-            if (eventsPtr == IntPtr.Zero) {
+            if (eventsPtr == IntPtr.Zero)
+            {
                 throw new ResultException(Result.InternalError);
             }
             InitEvents(eventsPtr, ref events);
             MethodsPtr = ptr;
-            if (MethodsPtr == IntPtr.Zero) {
+            if (MethodsPtr == IntPtr.Zero)
+            {
                 throw new ResultException(Result.InternalError);
             }
         }
 
         private void InitEvents(IntPtr eventsPtr, ref FFIEvents events)
         {
-            events.OnCurrentUserUpdate = OnCurrentUserUpdateImpl;
+            events.OnCurrentUserUpdate = OnCurrentUserUpdateDelegate;
             Marshal.StructureToPtr(events, eventsPtr, false);
         }
 
@@ -1458,6 +1480,7 @@ namespace GameSDK.GameSDK
             return ret;
         }
 
+        private static readonly FFIMethods.GetUserCallback GetUserCallbackDelegate = GetUserCallbackImpl;
         [MonoPInvokeCallback]
         private static void GetUserCallbackImpl(IntPtr ptr, Result result, ref User user)
         {
@@ -1470,7 +1493,7 @@ namespace GameSDK.GameSDK
         public void GetUser(Int64 userId, GetUserHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.GetUser(MethodsPtr, userId, GCHandle.ToIntPtr(wrapped), GetUserCallbackImpl);
+            Methods.GetUser(MethodsPtr, userId, GCHandle.ToIntPtr(wrapped), GetUserCallbackDelegate);
         }
 
         public PremiumType GetCurrentUserPremiumType()
@@ -1495,6 +1518,7 @@ namespace GameSDK.GameSDK
             return ret;
         }
 
+        private static readonly FFIEvents.CurrentUserUpdateHandler OnCurrentUserUpdateDelegate = OnCurrentUserUpdateImpl;
         [MonoPInvokeCallback]
         private static void OnCurrentUserUpdateImpl(IntPtr ptr)
         {
@@ -1558,12 +1582,14 @@ namespace GameSDK.GameSDK
 
         internal ImageManager(IntPtr ptr, IntPtr eventsPtr, ref FFIEvents events)
         {
-            if (eventsPtr == IntPtr.Zero) {
+            if (eventsPtr == IntPtr.Zero)
+            {
                 throw new ResultException(Result.InternalError);
             }
             InitEvents(eventsPtr, ref events);
             MethodsPtr = ptr;
-            if (MethodsPtr == IntPtr.Zero) {
+            if (MethodsPtr == IntPtr.Zero)
+            {
                 throw new ResultException(Result.InternalError);
             }
         }
@@ -1573,6 +1599,7 @@ namespace GameSDK.GameSDK
             Marshal.StructureToPtr(events, eventsPtr, false);
         }
 
+        private static readonly FFIMethods.FetchCallback FetchCallbackDelegate = FetchCallbackImpl;
         [MonoPInvokeCallback]
         private static void FetchCallbackImpl(IntPtr ptr, Result result, ImageHandle handleResult)
         {
@@ -1585,7 +1612,7 @@ namespace GameSDK.GameSDK
         public void Fetch(ImageHandle handle, bool refresh, FetchHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.Fetch(MethodsPtr, handle, refresh, GCHandle.ToIntPtr(wrapped), FetchCallbackImpl);
+            Methods.Fetch(MethodsPtr, handle, refresh, GCHandle.ToIntPtr(wrapped), FetchCallbackDelegate);
         }
 
         public ImageDimensions GetDimensions(ImageHandle handle)
@@ -1615,10 +1642,10 @@ namespace GameSDK.GameSDK
         internal partial struct FFIEvents
         {
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate void ActivityJoinHandler(IntPtr ptr, [MarshalAs(UnmanagedType.LPStr)]string secret);
+            internal delegate void ActivityJoinHandler(IntPtr ptr, [MarshalAs(UnmanagedType.LPStr)] string secret);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate void ActivitySpectateHandler(IntPtr ptr, [MarshalAs(UnmanagedType.LPStr)]string secret);
+            internal delegate void ActivitySpectateHandler(IntPtr ptr, [MarshalAs(UnmanagedType.LPStr)] string secret);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
             internal delegate void ActivityJoinRequestHandler(IntPtr ptr, ref User user);
@@ -1639,7 +1666,7 @@ namespace GameSDK.GameSDK
         internal partial struct FFIMethods
         {
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate Result RegisterCommandMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)]string command);
+            internal delegate Result RegisterCommandMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)] string command);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
             internal delegate Result RegisterSteamMethod(IntPtr methodsPtr, UInt32 steamId);
@@ -1666,7 +1693,7 @@ namespace GameSDK.GameSDK
             internal delegate void SendInviteCallback(IntPtr ptr, Result result);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate void SendInviteMethod(IntPtr methodsPtr, Int64 userId, ActivityActionType type, [MarshalAs(UnmanagedType.LPStr)]string content, IntPtr callbackData, SendInviteCallback callback);
+            internal delegate void SendInviteMethod(IntPtr methodsPtr, Int64 userId, ActivityActionType type, [MarshalAs(UnmanagedType.LPStr)] string content, IntPtr callbackData, SendInviteCallback callback);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
             internal delegate void AcceptInviteCallback(IntPtr ptr, Result result);
@@ -1734,22 +1761,24 @@ namespace GameSDK.GameSDK
 
         internal ActivityManager(IntPtr ptr, IntPtr eventsPtr, ref FFIEvents events)
         {
-            if (eventsPtr == IntPtr.Zero) {
+            if (eventsPtr == IntPtr.Zero)
+            {
                 throw new ResultException(Result.InternalError);
             }
             InitEvents(eventsPtr, ref events);
             MethodsPtr = ptr;
-            if (MethodsPtr == IntPtr.Zero) {
+            if (MethodsPtr == IntPtr.Zero)
+            {
                 throw new ResultException(Result.InternalError);
             }
         }
 
         private void InitEvents(IntPtr eventsPtr, ref FFIEvents events)
         {
-            events.OnActivityJoin = OnActivityJoinImpl;
-            events.OnActivitySpectate = OnActivitySpectateImpl;
-            events.OnActivityJoinRequest = OnActivityJoinRequestImpl;
-            events.OnActivityInvite = OnActivityInviteImpl;
+            events.OnActivityJoin = OnActivityJoinDelegate;
+            events.OnActivitySpectate = OnActivitySpectateDelegate;
+            events.OnActivityJoinRequest = OnActivityJoinRequestDelegate;
+            events.OnActivityInvite = OnActivityInviteDelegate;
             Marshal.StructureToPtr(events, eventsPtr, false);
         }
 
@@ -1771,6 +1800,7 @@ namespace GameSDK.GameSDK
             }
         }
 
+        private static readonly FFIMethods.UpdateActivityCallback UpdateActivityCallbackDelegate = UpdateActivityCallbackImpl;
         [MonoPInvokeCallback]
         private static void UpdateActivityCallbackImpl(IntPtr ptr, Result result)
         {
@@ -1783,9 +1813,10 @@ namespace GameSDK.GameSDK
         public void UpdateActivity(Activity activity, UpdateActivityHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.UpdateActivity(MethodsPtr, ref activity, GCHandle.ToIntPtr(wrapped), UpdateActivityCallbackImpl);
+            Methods.UpdateActivity(MethodsPtr, ref activity, GCHandle.ToIntPtr(wrapped), UpdateActivityCallbackDelegate);
         }
 
+        private static readonly FFIMethods.ClearActivityCallback ClearActivityCallbackDelegate = ClearActivityCallbackImpl;
         [MonoPInvokeCallback]
         private static void ClearActivityCallbackImpl(IntPtr ptr, Result result)
         {
@@ -1798,9 +1829,10 @@ namespace GameSDK.GameSDK
         public void ClearActivity(ClearActivityHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.ClearActivity(MethodsPtr, GCHandle.ToIntPtr(wrapped), ClearActivityCallbackImpl);
+            Methods.ClearActivity(MethodsPtr, GCHandle.ToIntPtr(wrapped), ClearActivityCallbackDelegate);
         }
 
+        private static readonly FFIMethods.SendRequestReplyCallback SendRequestReplyCallbackDelegate = SendRequestReplyCallbackImpl;
         [MonoPInvokeCallback]
         private static void SendRequestReplyCallbackImpl(IntPtr ptr, Result result)
         {
@@ -1813,9 +1845,10 @@ namespace GameSDK.GameSDK
         public void SendRequestReply(Int64 userId, ActivityJoinRequestReply reply, SendRequestReplyHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.SendRequestReply(MethodsPtr, userId, reply, GCHandle.ToIntPtr(wrapped), SendRequestReplyCallbackImpl);
+            Methods.SendRequestReply(MethodsPtr, userId, reply, GCHandle.ToIntPtr(wrapped), SendRequestReplyCallbackDelegate);
         }
 
+        private static readonly FFIMethods.SendInviteCallback SendInviteCallbackDelegate = SendInviteCallbackImpl;
         [MonoPInvokeCallback]
         private static void SendInviteCallbackImpl(IntPtr ptr, Result result)
         {
@@ -1828,9 +1861,10 @@ namespace GameSDK.GameSDK
         public void SendInvite(Int64 userId, ActivityActionType type, string content, SendInviteHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.SendInvite(MethodsPtr, userId, type, content, GCHandle.ToIntPtr(wrapped), SendInviteCallbackImpl);
+            Methods.SendInvite(MethodsPtr, userId, type, content, GCHandle.ToIntPtr(wrapped), SendInviteCallbackDelegate);
         }
 
+        private static readonly FFIMethods.AcceptInviteCallback AcceptInviteCallbackDelegate = AcceptInviteCallbackImpl;
         [MonoPInvokeCallback]
         private static void AcceptInviteCallbackImpl(IntPtr ptr, Result result)
         {
@@ -1843,9 +1877,10 @@ namespace GameSDK.GameSDK
         public void AcceptInvite(Int64 userId, AcceptInviteHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.AcceptInvite(MethodsPtr, userId, GCHandle.ToIntPtr(wrapped), AcceptInviteCallbackImpl);
+            Methods.AcceptInvite(MethodsPtr, userId, GCHandle.ToIntPtr(wrapped), AcceptInviteCallbackDelegate);
         }
 
+        private static readonly FFIEvents.ActivityJoinHandler OnActivityJoinDelegate = OnActivityJoinImpl;
         [MonoPInvokeCallback]
         private static void OnActivityJoinImpl(IntPtr ptr, string secret)
         {
@@ -1857,6 +1892,7 @@ namespace GameSDK.GameSDK
             }
         }
 
+        private static readonly FFIEvents.ActivitySpectateHandler OnActivitySpectateDelegate = OnActivitySpectateImpl;
         [MonoPInvokeCallback]
         private static void OnActivitySpectateImpl(IntPtr ptr, string secret)
         {
@@ -1868,6 +1904,7 @@ namespace GameSDK.GameSDK
             }
         }
 
+        private static readonly FFIEvents.ActivityJoinRequestHandler OnActivityJoinRequestDelegate = OnActivityJoinRequestImpl;
         [MonoPInvokeCallback]
         private static void OnActivityJoinRequestImpl(IntPtr ptr, ref User user)
         {
@@ -1879,6 +1916,7 @@ namespace GameSDK.GameSDK
             }
         }
 
+        private static readonly FFIEvents.ActivityInviteHandler OnActivityInviteDelegate = OnActivityInviteImpl;
         [MonoPInvokeCallback]
         private static void OnActivityInviteImpl(IntPtr ptr, ActivityActionType type, ref User user, ref Activity activity)
         {
@@ -1963,23 +2001,26 @@ namespace GameSDK.GameSDK
 
         internal RelationshipManager(IntPtr ptr, IntPtr eventsPtr, ref FFIEvents events)
         {
-            if (eventsPtr == IntPtr.Zero) {
+            if (eventsPtr == IntPtr.Zero)
+            {
                 throw new ResultException(Result.InternalError);
             }
             InitEvents(eventsPtr, ref events);
             MethodsPtr = ptr;
-            if (MethodsPtr == IntPtr.Zero) {
+            if (MethodsPtr == IntPtr.Zero)
+            {
                 throw new ResultException(Result.InternalError);
             }
         }
 
         private void InitEvents(IntPtr eventsPtr, ref FFIEvents events)
         {
-            events.OnRefresh = OnRefreshImpl;
-            events.OnRelationshipUpdate = OnRelationshipUpdateImpl;
+            events.OnRefresh = OnRefreshDelegate;
+            events.OnRelationshipUpdate = OnRelationshipUpdateDelegate;
             Marshal.StructureToPtr(events, eventsPtr, false);
         }
 
+        private static readonly FFIMethods.FilterCallback FilterCallbackDelegate = FilterCallbackImpl;
         [MonoPInvokeCallback]
         private static bool FilterCallbackImpl(IntPtr ptr, ref Relationship relationship)
         {
@@ -1991,7 +2032,7 @@ namespace GameSDK.GameSDK
         public void Filter(FilterHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.Filter(MethodsPtr, GCHandle.ToIntPtr(wrapped), FilterCallbackImpl);
+            Methods.Filter(MethodsPtr, GCHandle.ToIntPtr(wrapped), FilterCallbackDelegate);
             wrapped.Free();
         }
 
@@ -2028,6 +2069,7 @@ namespace GameSDK.GameSDK
             return ret;
         }
 
+        private static readonly FFIEvents.RefreshHandler OnRefreshDelegate = OnRefreshImpl;
         [MonoPInvokeCallback]
         private static void OnRefreshImpl(IntPtr ptr)
         {
@@ -2039,6 +2081,7 @@ namespace GameSDK.GameSDK
             }
         }
 
+        private static readonly FFIEvents.RelationshipUpdateHandler OnRelationshipUpdateDelegate = OnRelationshipUpdateImpl;
         [MonoPInvokeCallback]
         private static void OnRelationshipUpdateImpl(IntPtr ptr, ref Relationship relationship)
         {
@@ -2131,13 +2174,13 @@ namespace GameSDK.GameSDK
             internal delegate void ConnectLobbyCallback(IntPtr ptr, Result result, ref Lobby lobby);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate void ConnectLobbyMethod(IntPtr methodsPtr, Int64 lobbyId, [MarshalAs(UnmanagedType.LPStr)]string secret, IntPtr callbackData, ConnectLobbyCallback callback);
+            internal delegate void ConnectLobbyMethod(IntPtr methodsPtr, Int64 lobbyId, [MarshalAs(UnmanagedType.LPStr)] string secret, IntPtr callbackData, ConnectLobbyCallback callback);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
             internal delegate void ConnectLobbyWithActivitySecretCallback(IntPtr ptr, Result result, ref Lobby lobby);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate void ConnectLobbyWithActivitySecretMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)]string activitySecret, IntPtr callbackData, ConnectLobbyWithActivitySecretCallback callback);
+            internal delegate void ConnectLobbyWithActivitySecretMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)] string activitySecret, IntPtr callbackData, ConnectLobbyWithActivitySecretCallback callback);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
             internal delegate void DisconnectLobbyCallback(IntPtr ptr, Result result);
@@ -2152,7 +2195,7 @@ namespace GameSDK.GameSDK
             internal delegate Result GetLobbyActivitySecretMethod(IntPtr methodsPtr, Int64 lobbyId, StringBuilder secret);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate Result GetLobbyMetadataValueMethod(IntPtr methodsPtr, Int64 lobbyId, [MarshalAs(UnmanagedType.LPStr)]string key, StringBuilder value);
+            internal delegate Result GetLobbyMetadataValueMethod(IntPtr methodsPtr, Int64 lobbyId, [MarshalAs(UnmanagedType.LPStr)] string key, StringBuilder value);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
             internal delegate Result GetLobbyMetadataKeyMethod(IntPtr methodsPtr, Int64 lobbyId, Int32 index, StringBuilder key);
@@ -2170,7 +2213,7 @@ namespace GameSDK.GameSDK
             internal delegate Result GetMemberUserMethod(IntPtr methodsPtr, Int64 lobbyId, Int64 userId, ref User user);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate Result GetMemberMetadataValueMethod(IntPtr methodsPtr, Int64 lobbyId, Int64 userId, [MarshalAs(UnmanagedType.LPStr)]string key, StringBuilder value);
+            internal delegate Result GetMemberMetadataValueMethod(IntPtr methodsPtr, Int64 lobbyId, Int64 userId, [MarshalAs(UnmanagedType.LPStr)] string key, StringBuilder value);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
             internal delegate Result GetMemberMetadataKeyMethod(IntPtr methodsPtr, Int64 lobbyId, Int64 userId, Int32 index, StringBuilder key);
@@ -2372,26 +2415,28 @@ namespace GameSDK.GameSDK
 
         internal LobbyManager(IntPtr ptr, IntPtr eventsPtr, ref FFIEvents events)
         {
-            if (eventsPtr == IntPtr.Zero) {
+            if (eventsPtr == IntPtr.Zero)
+            {
                 throw new ResultException(Result.InternalError);
             }
             InitEvents(eventsPtr, ref events);
             MethodsPtr = ptr;
-            if (MethodsPtr == IntPtr.Zero) {
+            if (MethodsPtr == IntPtr.Zero)
+            {
                 throw new ResultException(Result.InternalError);
             }
         }
 
         private void InitEvents(IntPtr eventsPtr, ref FFIEvents events)
         {
-            events.OnLobbyUpdate = OnLobbyUpdateImpl;
-            events.OnLobbyDelete = OnLobbyDeleteImpl;
-            events.OnMemberConnect = OnMemberConnectImpl;
-            events.OnMemberUpdate = OnMemberUpdateImpl;
-            events.OnMemberDisconnect = OnMemberDisconnectImpl;
-            events.OnLobbyMessage = OnLobbyMessageImpl;
-            events.OnSpeaking = OnSpeakingImpl;
-            events.OnNetworkMessage = OnNetworkMessageImpl;
+            events.OnLobbyUpdate = OnLobbyUpdateDelegate;
+            events.OnLobbyDelete = OnLobbyDeleteDelegate;
+            events.OnMemberConnect = OnMemberConnectDelegate;
+            events.OnMemberUpdate = OnMemberUpdateDelegate;
+            events.OnMemberDisconnect = OnMemberDisconnectDelegate;
+            events.OnLobbyMessage = OnLobbyMessageDelegate;
+            events.OnSpeaking = OnSpeakingDelegate;
+            events.OnNetworkMessage = OnNetworkMessageDelegate;
             Marshal.StructureToPtr(events, eventsPtr, false);
         }
 
@@ -2428,6 +2473,7 @@ namespace GameSDK.GameSDK
             return ret;
         }
 
+        private static readonly FFIMethods.CreateLobbyCallback CreateLobbyCallbackDelegate = CreateLobbyCallbackImpl;
         [MonoPInvokeCallback]
         private static void CreateLobbyCallbackImpl(IntPtr ptr, Result result, ref Lobby lobby)
         {
@@ -2440,10 +2486,11 @@ namespace GameSDK.GameSDK
         public void CreateLobby(LobbyTransaction transaction, CreateLobbyHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.CreateLobby(MethodsPtr, transaction.MethodsPtr, GCHandle.ToIntPtr(wrapped), CreateLobbyCallbackImpl);
+            Methods.CreateLobby(MethodsPtr, transaction.MethodsPtr, GCHandle.ToIntPtr(wrapped), CreateLobbyCallbackDelegate);
             transaction.MethodsPtr = IntPtr.Zero;
         }
 
+        private static readonly FFIMethods.UpdateLobbyCallback UpdateLobbyCallbackDelegate = UpdateLobbyCallbackImpl;
         [MonoPInvokeCallback]
         private static void UpdateLobbyCallbackImpl(IntPtr ptr, Result result)
         {
@@ -2456,10 +2503,11 @@ namespace GameSDK.GameSDK
         public void UpdateLobby(Int64 lobbyId, LobbyTransaction transaction, UpdateLobbyHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.UpdateLobby(MethodsPtr, lobbyId, transaction.MethodsPtr, GCHandle.ToIntPtr(wrapped), UpdateLobbyCallbackImpl);
+            Methods.UpdateLobby(MethodsPtr, lobbyId, transaction.MethodsPtr, GCHandle.ToIntPtr(wrapped), UpdateLobbyCallbackDelegate);
             transaction.MethodsPtr = IntPtr.Zero;
         }
 
+        private static readonly FFIMethods.DeleteLobbyCallback DeleteLobbyCallbackDelegate = DeleteLobbyCallbackImpl;
         [MonoPInvokeCallback]
         private static void DeleteLobbyCallbackImpl(IntPtr ptr, Result result)
         {
@@ -2472,9 +2520,10 @@ namespace GameSDK.GameSDK
         public void DeleteLobby(Int64 lobbyId, DeleteLobbyHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.DeleteLobby(MethodsPtr, lobbyId, GCHandle.ToIntPtr(wrapped), DeleteLobbyCallbackImpl);
+            Methods.DeleteLobby(MethodsPtr, lobbyId, GCHandle.ToIntPtr(wrapped), DeleteLobbyCallbackDelegate);
         }
 
+        private static readonly FFIMethods.ConnectLobbyCallback ConnectLobbyCallbackDelegate = ConnectLobbyCallbackImpl;
         [MonoPInvokeCallback]
         private static void ConnectLobbyCallbackImpl(IntPtr ptr, Result result, ref Lobby lobby)
         {
@@ -2487,9 +2536,10 @@ namespace GameSDK.GameSDK
         public void ConnectLobby(Int64 lobbyId, string secret, ConnectLobbyHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.ConnectLobby(MethodsPtr, lobbyId, secret, GCHandle.ToIntPtr(wrapped), ConnectLobbyCallbackImpl);
+            Methods.ConnectLobby(MethodsPtr, lobbyId, secret, GCHandle.ToIntPtr(wrapped), ConnectLobbyCallbackDelegate);
         }
 
+        private static readonly FFIMethods.ConnectLobbyWithActivitySecretCallback ConnectLobbyWithActivitySecretCallbackDelegate = ConnectLobbyWithActivitySecretCallbackImpl;
         [MonoPInvokeCallback]
         private static void ConnectLobbyWithActivitySecretCallbackImpl(IntPtr ptr, Result result, ref Lobby lobby)
         {
@@ -2502,9 +2552,10 @@ namespace GameSDK.GameSDK
         public void ConnectLobbyWithActivitySecret(string activitySecret, ConnectLobbyWithActivitySecretHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.ConnectLobbyWithActivitySecret(MethodsPtr, activitySecret, GCHandle.ToIntPtr(wrapped), ConnectLobbyWithActivitySecretCallbackImpl);
+            Methods.ConnectLobbyWithActivitySecret(MethodsPtr, activitySecret, GCHandle.ToIntPtr(wrapped), ConnectLobbyWithActivitySecretCallbackDelegate);
         }
 
+        private static readonly FFIMethods.DisconnectLobbyCallback DisconnectLobbyCallbackDelegate = DisconnectLobbyCallbackImpl;
         [MonoPInvokeCallback]
         private static void DisconnectLobbyCallbackImpl(IntPtr ptr, Result result)
         {
@@ -2517,7 +2568,7 @@ namespace GameSDK.GameSDK
         public void DisconnectLobby(Int64 lobbyId, DisconnectLobbyHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.DisconnectLobby(MethodsPtr, lobbyId, GCHandle.ToIntPtr(wrapped), DisconnectLobbyCallbackImpl);
+            Methods.DisconnectLobby(MethodsPtr, lobbyId, GCHandle.ToIntPtr(wrapped), DisconnectLobbyCallbackDelegate);
         }
 
         public Lobby GetLobby(Int64 lobbyId)
@@ -2641,6 +2692,7 @@ namespace GameSDK.GameSDK
             return ret;
         }
 
+        private static readonly FFIMethods.UpdateMemberCallback UpdateMemberCallbackDelegate = UpdateMemberCallbackImpl;
         [MonoPInvokeCallback]
         private static void UpdateMemberCallbackImpl(IntPtr ptr, Result result)
         {
@@ -2653,10 +2705,11 @@ namespace GameSDK.GameSDK
         public void UpdateMember(Int64 lobbyId, Int64 userId, LobbyMemberTransaction transaction, UpdateMemberHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.UpdateMember(MethodsPtr, lobbyId, userId, transaction.MethodsPtr, GCHandle.ToIntPtr(wrapped), UpdateMemberCallbackImpl);
+            Methods.UpdateMember(MethodsPtr, lobbyId, userId, transaction.MethodsPtr, GCHandle.ToIntPtr(wrapped), UpdateMemberCallbackDelegate);
             transaction.MethodsPtr = IntPtr.Zero;
         }
 
+        private static readonly FFIMethods.SendLobbyMessageCallback SendLobbyMessageCallbackDelegate = SendLobbyMessageCallbackImpl;
         [MonoPInvokeCallback]
         private static void SendLobbyMessageCallbackImpl(IntPtr ptr, Result result)
         {
@@ -2669,7 +2722,7 @@ namespace GameSDK.GameSDK
         public void SendLobbyMessage(Int64 lobbyId, byte[] data, SendLobbyMessageHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.SendLobbyMessage(MethodsPtr, lobbyId, data, data.Length, GCHandle.ToIntPtr(wrapped), SendLobbyMessageCallbackImpl);
+            Methods.SendLobbyMessage(MethodsPtr, lobbyId, data, data.Length, GCHandle.ToIntPtr(wrapped), SendLobbyMessageCallbackDelegate);
         }
 
         public LobbySearchQuery GetSearchQuery()
@@ -2683,6 +2736,7 @@ namespace GameSDK.GameSDK
             return ret;
         }
 
+        private static readonly FFIMethods.SearchCallback SearchCallbackDelegate = SearchCallbackImpl;
         [MonoPInvokeCallback]
         private static void SearchCallbackImpl(IntPtr ptr, Result result)
         {
@@ -2695,7 +2749,7 @@ namespace GameSDK.GameSDK
         public void Search(LobbySearchQuery query, SearchHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.Search(MethodsPtr, query.MethodsPtr, GCHandle.ToIntPtr(wrapped), SearchCallbackImpl);
+            Methods.Search(MethodsPtr, query.MethodsPtr, GCHandle.ToIntPtr(wrapped), SearchCallbackDelegate);
             query.MethodsPtr = IntPtr.Zero;
         }
 
@@ -2717,6 +2771,7 @@ namespace GameSDK.GameSDK
             return ret;
         }
 
+        private static readonly FFIMethods.ConnectVoiceCallback ConnectVoiceCallbackDelegate = ConnectVoiceCallbackImpl;
         [MonoPInvokeCallback]
         private static void ConnectVoiceCallbackImpl(IntPtr ptr, Result result)
         {
@@ -2729,9 +2784,10 @@ namespace GameSDK.GameSDK
         public void ConnectVoice(Int64 lobbyId, ConnectVoiceHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.ConnectVoice(MethodsPtr, lobbyId, GCHandle.ToIntPtr(wrapped), ConnectVoiceCallbackImpl);
+            Methods.ConnectVoice(MethodsPtr, lobbyId, GCHandle.ToIntPtr(wrapped), ConnectVoiceCallbackDelegate);
         }
 
+        private static readonly FFIMethods.DisconnectVoiceCallback DisconnectVoiceCallbackDelegate = DisconnectVoiceCallbackImpl;
         [MonoPInvokeCallback]
         private static void DisconnectVoiceCallbackImpl(IntPtr ptr, Result result)
         {
@@ -2744,7 +2800,7 @@ namespace GameSDK.GameSDK
         public void DisconnectVoice(Int64 lobbyId, DisconnectVoiceHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.DisconnectVoice(MethodsPtr, lobbyId, GCHandle.ToIntPtr(wrapped), DisconnectVoiceCallbackImpl);
+            Methods.DisconnectVoice(MethodsPtr, lobbyId, GCHandle.ToIntPtr(wrapped), DisconnectVoiceCallbackDelegate);
         }
 
         public void ConnectNetwork(Int64 lobbyId)
@@ -2792,6 +2848,7 @@ namespace GameSDK.GameSDK
             }
         }
 
+        private static readonly FFIEvents.LobbyUpdateHandler OnLobbyUpdateDelegate = OnLobbyUpdateImpl;
         [MonoPInvokeCallback]
         private static void OnLobbyUpdateImpl(IntPtr ptr, Int64 lobbyId)
         {
@@ -2803,6 +2860,7 @@ namespace GameSDK.GameSDK
             }
         }
 
+        private static readonly FFIEvents.LobbyDeleteHandler OnLobbyDeleteDelegate = OnLobbyDeleteImpl;
         [MonoPInvokeCallback]
         private static void OnLobbyDeleteImpl(IntPtr ptr, Int64 lobbyId, UInt32 reason)
         {
@@ -2814,6 +2872,7 @@ namespace GameSDK.GameSDK
             }
         }
 
+        private static readonly FFIEvents.MemberConnectHandler OnMemberConnectDelegate = OnMemberConnectImpl;
         [MonoPInvokeCallback]
         private static void OnMemberConnectImpl(IntPtr ptr, Int64 lobbyId, Int64 userId)
         {
@@ -2825,6 +2884,7 @@ namespace GameSDK.GameSDK
             }
         }
 
+        private static readonly FFIEvents.MemberUpdateHandler OnMemberUpdateDelegate = OnMemberUpdateImpl;
         [MonoPInvokeCallback]
         private static void OnMemberUpdateImpl(IntPtr ptr, Int64 lobbyId, Int64 userId)
         {
@@ -2836,6 +2896,7 @@ namespace GameSDK.GameSDK
             }
         }
 
+        private static readonly FFIEvents.MemberDisconnectHandler OnMemberDisconnectDelegate = OnMemberDisconnectImpl;
         [MonoPInvokeCallback]
         private static void OnMemberDisconnectImpl(IntPtr ptr, Int64 lobbyId, Int64 userId)
         {
@@ -2847,6 +2908,7 @@ namespace GameSDK.GameSDK
             }
         }
 
+        private static readonly FFIEvents.LobbyMessageHandler OnLobbyMessageDelegate = OnLobbyMessageImpl;
         [MonoPInvokeCallback]
         private static void OnLobbyMessageImpl(IntPtr ptr, Int64 lobbyId, Int64 userId, IntPtr dataPtr, Int32 dataLen)
         {
@@ -2860,6 +2922,7 @@ namespace GameSDK.GameSDK
             }
         }
 
+        private static readonly FFIEvents.SpeakingHandler OnSpeakingDelegate = OnSpeakingImpl;
         [MonoPInvokeCallback]
         private static void OnSpeakingImpl(IntPtr ptr, Int64 lobbyId, Int64 userId, bool speaking)
         {
@@ -2871,6 +2934,7 @@ namespace GameSDK.GameSDK
             }
         }
 
+        private static readonly FFIEvents.NetworkMessageHandler OnNetworkMessageDelegate = OnNetworkMessageImpl;
         [MonoPInvokeCallback]
         private static void OnNetworkMessageImpl(IntPtr ptr, Int64 lobbyId, Int64 userId, byte channelId, IntPtr dataPtr, Int32 dataLen)
         {
@@ -2894,7 +2958,7 @@ namespace GameSDK.GameSDK
             internal delegate void MessageHandler(IntPtr ptr, UInt64 peerId, byte channelId, IntPtr dataPtr, Int32 dataLen);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate void RouteUpdateHandler(IntPtr ptr, [MarshalAs(UnmanagedType.LPStr)]string routeData);
+            internal delegate void RouteUpdateHandler(IntPtr ptr, [MarshalAs(UnmanagedType.LPStr)] string routeData);
 
             internal MessageHandler OnMessage;
 
@@ -2911,10 +2975,10 @@ namespace GameSDK.GameSDK
             internal delegate Result FlushMethod(IntPtr methodsPtr);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate Result OpenPeerMethod(IntPtr methodsPtr, UInt64 peerId, [MarshalAs(UnmanagedType.LPStr)]string routeData);
+            internal delegate Result OpenPeerMethod(IntPtr methodsPtr, UInt64 peerId, [MarshalAs(UnmanagedType.LPStr)] string routeData);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate Result UpdatePeerMethod(IntPtr methodsPtr, UInt64 peerId, [MarshalAs(UnmanagedType.LPStr)]string routeData);
+            internal delegate Result UpdatePeerMethod(IntPtr methodsPtr, UInt64 peerId, [MarshalAs(UnmanagedType.LPStr)] string routeData);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
             internal delegate Result ClosePeerMethod(IntPtr methodsPtr, UInt64 peerId);
@@ -2972,20 +3036,22 @@ namespace GameSDK.GameSDK
 
         internal NetworkManager(IntPtr ptr, IntPtr eventsPtr, ref FFIEvents events)
         {
-            if (eventsPtr == IntPtr.Zero) {
+            if (eventsPtr == IntPtr.Zero)
+            {
                 throw new ResultException(Result.InternalError);
             }
             InitEvents(eventsPtr, ref events);
             MethodsPtr = ptr;
-            if (MethodsPtr == IntPtr.Zero) {
+            if (MethodsPtr == IntPtr.Zero)
+            {
                 throw new ResultException(Result.InternalError);
             }
         }
 
         private void InitEvents(IntPtr eventsPtr, ref FFIEvents events)
         {
-            events.OnMessage = OnMessageImpl;
-            events.OnRouteUpdate = OnRouteUpdateImpl;
+            events.OnMessage = OnMessageDelegate;
+            events.OnRouteUpdate = OnRouteUpdateDelegate;
             Marshal.StructureToPtr(events, eventsPtr, false);
         }
 
@@ -3083,6 +3149,7 @@ namespace GameSDK.GameSDK
             }
         }
 
+        private static readonly FFIEvents.MessageHandler OnMessageDelegate = OnMessageImpl;
         [MonoPInvokeCallback]
         private static void OnMessageImpl(IntPtr ptr, UInt64 peerId, byte channelId, IntPtr dataPtr, Int32 dataLen)
         {
@@ -3096,6 +3163,7 @@ namespace GameSDK.GameSDK
             }
         }
 
+        private static readonly FFIEvents.RouteUpdateHandler OnRouteUpdateDelegate = OnRouteUpdateImpl;
         [MonoPInvokeCallback]
         private static void OnRouteUpdateImpl(IntPtr ptr, string routeData)
         {
@@ -3144,7 +3212,7 @@ namespace GameSDK.GameSDK
             internal delegate void OpenGuildInviteCallback(IntPtr ptr, Result result);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate void OpenGuildInviteMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)]string code, IntPtr callbackData, OpenGuildInviteCallback callback);
+            internal delegate void OpenGuildInviteMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)] string code, IntPtr callbackData, OpenGuildInviteCallback callback);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
             internal delegate void OpenVoiceSettingsCallback(IntPtr ptr, Result result);
@@ -3196,19 +3264,21 @@ namespace GameSDK.GameSDK
 
         internal OverlayManager(IntPtr ptr, IntPtr eventsPtr, ref FFIEvents events)
         {
-            if (eventsPtr == IntPtr.Zero) {
+            if (eventsPtr == IntPtr.Zero)
+            {
                 throw new ResultException(Result.InternalError);
             }
             InitEvents(eventsPtr, ref events);
             MethodsPtr = ptr;
-            if (MethodsPtr == IntPtr.Zero) {
+            if (MethodsPtr == IntPtr.Zero)
+            {
                 throw new ResultException(Result.InternalError);
             }
         }
 
         private void InitEvents(IntPtr eventsPtr, ref FFIEvents events)
         {
-            events.OnToggle = OnToggleImpl;
+            events.OnToggle = OnToggleDelegate;
             Marshal.StructureToPtr(events, eventsPtr, false);
         }
 
@@ -3226,6 +3296,7 @@ namespace GameSDK.GameSDK
             return ret;
         }
 
+        private static readonly FFIMethods.SetLockedCallback SetLockedCallbackDelegate = SetLockedCallbackImpl;
         [MonoPInvokeCallback]
         private static void SetLockedCallbackImpl(IntPtr ptr, Result result)
         {
@@ -3238,9 +3309,10 @@ namespace GameSDK.GameSDK
         public void SetLocked(bool locked, SetLockedHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.SetLocked(MethodsPtr, locked, GCHandle.ToIntPtr(wrapped), SetLockedCallbackImpl);
+            Methods.SetLocked(MethodsPtr, locked, GCHandle.ToIntPtr(wrapped), SetLockedCallbackDelegate);
         }
 
+        private static readonly FFIMethods.OpenActivityInviteCallback OpenActivityInviteCallbackDelegate = OpenActivityInviteCallbackImpl;
         [MonoPInvokeCallback]
         private static void OpenActivityInviteCallbackImpl(IntPtr ptr, Result result)
         {
@@ -3253,9 +3325,10 @@ namespace GameSDK.GameSDK
         public void OpenActivityInvite(ActivityActionType type, OpenActivityInviteHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.OpenActivityInvite(MethodsPtr, type, GCHandle.ToIntPtr(wrapped), OpenActivityInviteCallbackImpl);
+            Methods.OpenActivityInvite(MethodsPtr, type, GCHandle.ToIntPtr(wrapped), OpenActivityInviteCallbackDelegate);
         }
 
+        private static readonly FFIMethods.OpenGuildInviteCallback OpenGuildInviteCallbackDelegate = OpenGuildInviteCallbackImpl;
         [MonoPInvokeCallback]
         private static void OpenGuildInviteCallbackImpl(IntPtr ptr, Result result)
         {
@@ -3268,9 +3341,10 @@ namespace GameSDK.GameSDK
         public void OpenGuildInvite(string code, OpenGuildInviteHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.OpenGuildInvite(MethodsPtr, code, GCHandle.ToIntPtr(wrapped), OpenGuildInviteCallbackImpl);
+            Methods.OpenGuildInvite(MethodsPtr, code, GCHandle.ToIntPtr(wrapped), OpenGuildInviteCallbackDelegate);
         }
 
+        private static readonly FFIMethods.OpenVoiceSettingsCallback OpenVoiceSettingsCallbackDelegate = OpenVoiceSettingsCallbackImpl;
         [MonoPInvokeCallback]
         private static void OpenVoiceSettingsCallbackImpl(IntPtr ptr, Result result)
         {
@@ -3283,9 +3357,10 @@ namespace GameSDK.GameSDK
         public void OpenVoiceSettings(OpenVoiceSettingsHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.OpenVoiceSettings(MethodsPtr, GCHandle.ToIntPtr(wrapped), OpenVoiceSettingsCallbackImpl);
+            Methods.OpenVoiceSettings(MethodsPtr, GCHandle.ToIntPtr(wrapped), OpenVoiceSettingsCallbackDelegate);
         }
 
+        private static readonly FFIEvents.ToggleHandler OnToggleDelegate = OnToggleImpl;
         [MonoPInvokeCallback]
         private static void OnToggleImpl(IntPtr ptr, bool locked)
         {
@@ -3310,40 +3385,40 @@ namespace GameSDK.GameSDK
         internal partial struct FFIMethods
         {
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate Result ReadMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)]string name, byte[] data, Int32 dataLen, ref UInt32 read);
+            internal delegate Result ReadMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)] string name, byte[] data, Int32 dataLen, ref UInt32 read);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
             internal delegate void ReadAsyncCallback(IntPtr ptr, Result result, IntPtr dataPtr, Int32 dataLen);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate void ReadAsyncMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)]string name, IntPtr callbackData, ReadAsyncCallback callback);
+            internal delegate void ReadAsyncMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)] string name, IntPtr callbackData, ReadAsyncCallback callback);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
             internal delegate void ReadAsyncPartialCallback(IntPtr ptr, Result result, IntPtr dataPtr, Int32 dataLen);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate void ReadAsyncPartialMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)]string name, UInt64 offset, UInt64 length, IntPtr callbackData, ReadAsyncPartialCallback callback);
+            internal delegate void ReadAsyncPartialMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)] string name, UInt64 offset, UInt64 length, IntPtr callbackData, ReadAsyncPartialCallback callback);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate Result WriteMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)]string name, byte[] data, Int32 dataLen);
+            internal delegate Result WriteMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)] string name, byte[] data, Int32 dataLen);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
             internal delegate void WriteAsyncCallback(IntPtr ptr, Result result);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate void WriteAsyncMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)]string name, byte[] data, Int32 dataLen, IntPtr callbackData, WriteAsyncCallback callback);
+            internal delegate void WriteAsyncMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)] string name, byte[] data, Int32 dataLen, IntPtr callbackData, WriteAsyncCallback callback);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate Result DeleteMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)]string name);
+            internal delegate Result DeleteMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)] string name);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate Result ExistsMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)]string name, ref bool exists);
+            internal delegate Result ExistsMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)] string name, ref bool exists);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
             internal delegate void CountMethod(IntPtr methodsPtr, ref Int32 count);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            internal delegate Result StatMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)]string name, ref FileStat stat);
+            internal delegate Result StatMethod(IntPtr methodsPtr, [MarshalAs(UnmanagedType.LPStr)] string name, ref FileStat stat);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
             internal delegate Result StatAtMethod(IntPtr methodsPtr, Int32 index, ref FileStat stat);
@@ -3399,12 +3474,14 @@ namespace GameSDK.GameSDK
 
         internal StorageManager(IntPtr ptr, IntPtr eventsPtr, ref FFIEvents events)
         {
-            if (eventsPtr == IntPtr.Zero) {
+            if (eventsPtr == IntPtr.Zero)
+            {
                 throw new ResultException(Result.InternalError);
             }
             InitEvents(eventsPtr, ref events);
             MethodsPtr = ptr;
-            if (MethodsPtr == IntPtr.Zero) {
+            if (MethodsPtr == IntPtr.Zero)
+            {
                 throw new ResultException(Result.InternalError);
             }
         }
@@ -3425,6 +3502,7 @@ namespace GameSDK.GameSDK
             return ret;
         }
 
+        private static readonly FFIMethods.ReadAsyncCallback ReadAsyncCallbackDelegate = ReadAsyncCallbackImpl;
         [MonoPInvokeCallback]
         private static void ReadAsyncCallbackImpl(IntPtr ptr, Result result, IntPtr dataPtr, Int32 dataLen)
         {
@@ -3439,9 +3517,10 @@ namespace GameSDK.GameSDK
         public void ReadAsync(string name, ReadAsyncHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.ReadAsync(MethodsPtr, name, GCHandle.ToIntPtr(wrapped), ReadAsyncCallbackImpl);
+            Methods.ReadAsync(MethodsPtr, name, GCHandle.ToIntPtr(wrapped), ReadAsyncCallbackDelegate);
         }
 
+        private static readonly FFIMethods.ReadAsyncPartialCallback ReadAsyncPartialCallbackDelegate = ReadAsyncPartialCallbackImpl;
         [MonoPInvokeCallback]
         private static void ReadAsyncPartialCallbackImpl(IntPtr ptr, Result result, IntPtr dataPtr, Int32 dataLen)
         {
@@ -3456,7 +3535,7 @@ namespace GameSDK.GameSDK
         public void ReadAsyncPartial(string name, UInt64 offset, UInt64 length, ReadAsyncPartialHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.ReadAsyncPartial(MethodsPtr, name, offset, length, GCHandle.ToIntPtr(wrapped), ReadAsyncPartialCallbackImpl);
+            Methods.ReadAsyncPartial(MethodsPtr, name, offset, length, GCHandle.ToIntPtr(wrapped), ReadAsyncPartialCallbackDelegate);
         }
 
         public void Write(string name, byte[] data)
@@ -3468,6 +3547,7 @@ namespace GameSDK.GameSDK
             }
         }
 
+        private static readonly FFIMethods.WriteAsyncCallback WriteAsyncCallbackDelegate = WriteAsyncCallbackImpl;
         [MonoPInvokeCallback]
         private static void WriteAsyncCallbackImpl(IntPtr ptr, Result result)
         {
@@ -3480,7 +3560,7 @@ namespace GameSDK.GameSDK
         public void WriteAsync(string name, byte[] data, WriteAsyncHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.WriteAsync(MethodsPtr, name, data, data.Length, GCHandle.ToIntPtr(wrapped), WriteAsyncCallbackImpl);
+            Methods.WriteAsync(MethodsPtr, name, data, data.Length, GCHandle.ToIntPtr(wrapped), WriteAsyncCallbackDelegate);
         }
 
         public void Delete(string name)
@@ -3656,23 +3736,26 @@ namespace GameSDK.GameSDK
 
         internal StoreManager(IntPtr ptr, IntPtr eventsPtr, ref FFIEvents events)
         {
-            if (eventsPtr == IntPtr.Zero) {
+            if (eventsPtr == IntPtr.Zero)
+            {
                 throw new ResultException(Result.InternalError);
             }
             InitEvents(eventsPtr, ref events);
             MethodsPtr = ptr;
-            if (MethodsPtr == IntPtr.Zero) {
+            if (MethodsPtr == IntPtr.Zero)
+            {
                 throw new ResultException(Result.InternalError);
             }
         }
 
         private void InitEvents(IntPtr eventsPtr, ref FFIEvents events)
         {
-            events.OnEntitlementCreate = OnEntitlementCreateImpl;
-            events.OnEntitlementDelete = OnEntitlementDeleteImpl;
+            events.OnEntitlementCreate = OnEntitlementCreateDelegate;
+            events.OnEntitlementDelete = OnEntitlementDeleteDelegate;
             Marshal.StructureToPtr(events, eventsPtr, false);
         }
 
+        private static readonly FFIMethods.FetchSkusCallback FetchSkusCallbackDelegate = FetchSkusCallbackImpl;
         [MonoPInvokeCallback]
         private static void FetchSkusCallbackImpl(IntPtr ptr, Result result)
         {
@@ -3685,7 +3768,7 @@ namespace GameSDK.GameSDK
         public void FetchSkus(FetchSkusHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.FetchSkus(MethodsPtr, GCHandle.ToIntPtr(wrapped), FetchSkusCallbackImpl);
+            Methods.FetchSkus(MethodsPtr, GCHandle.ToIntPtr(wrapped), FetchSkusCallbackDelegate);
         }
 
         public Int32 CountSkus()
@@ -3717,6 +3800,7 @@ namespace GameSDK.GameSDK
             return ret;
         }
 
+        private static readonly FFIMethods.FetchEntitlementsCallback FetchEntitlementsCallbackDelegate = FetchEntitlementsCallbackImpl;
         [MonoPInvokeCallback]
         private static void FetchEntitlementsCallbackImpl(IntPtr ptr, Result result)
         {
@@ -3729,7 +3813,7 @@ namespace GameSDK.GameSDK
         public void FetchEntitlements(FetchEntitlementsHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.FetchEntitlements(MethodsPtr, GCHandle.ToIntPtr(wrapped), FetchEntitlementsCallbackImpl);
+            Methods.FetchEntitlements(MethodsPtr, GCHandle.ToIntPtr(wrapped), FetchEntitlementsCallbackDelegate);
         }
 
         public Int32 CountEntitlements()
@@ -3772,6 +3856,7 @@ namespace GameSDK.GameSDK
             return ret;
         }
 
+        private static readonly FFIMethods.StartPurchaseCallback StartPurchaseCallbackDelegate = StartPurchaseCallbackImpl;
         [MonoPInvokeCallback]
         private static void StartPurchaseCallbackImpl(IntPtr ptr, Result result)
         {
@@ -3784,9 +3869,10 @@ namespace GameSDK.GameSDK
         public void StartPurchase(Int64 skuId, StartPurchaseHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.StartPurchase(MethodsPtr, skuId, GCHandle.ToIntPtr(wrapped), StartPurchaseCallbackImpl);
+            Methods.StartPurchase(MethodsPtr, skuId, GCHandle.ToIntPtr(wrapped), StartPurchaseCallbackDelegate);
         }
 
+        private static readonly FFIEvents.EntitlementCreateHandler OnEntitlementCreateDelegate = OnEntitlementCreateImpl;
         [MonoPInvokeCallback]
         private static void OnEntitlementCreateImpl(IntPtr ptr, ref Entitlement entitlement)
         {
@@ -3798,6 +3884,7 @@ namespace GameSDK.GameSDK
             }
         }
 
+        private static readonly FFIEvents.EntitlementDeleteHandler OnEntitlementDeleteDelegate = OnEntitlementDeleteImpl;
         [MonoPInvokeCallback]
         private static void OnEntitlementDeleteImpl(IntPtr ptr, ref Entitlement entitlement)
         {
@@ -3903,19 +3990,21 @@ namespace GameSDK.GameSDK
 
         internal VoiceManager(IntPtr ptr, IntPtr eventsPtr, ref FFIEvents events)
         {
-            if (eventsPtr == IntPtr.Zero) {
+            if (eventsPtr == IntPtr.Zero)
+            {
                 throw new ResultException(Result.InternalError);
             }
             InitEvents(eventsPtr, ref events);
             MethodsPtr = ptr;
-            if (MethodsPtr == IntPtr.Zero) {
+            if (MethodsPtr == IntPtr.Zero)
+            {
                 throw new ResultException(Result.InternalError);
             }
         }
 
         private void InitEvents(IntPtr eventsPtr, ref FFIEvents events)
         {
-            events.OnSettingsUpdate = OnSettingsUpdateImpl;
+            events.OnSettingsUpdate = OnSettingsUpdateDelegate;
             Marshal.StructureToPtr(events, eventsPtr, false);
         }
 
@@ -3930,6 +4019,7 @@ namespace GameSDK.GameSDK
             return ret;
         }
 
+        private static readonly FFIMethods.SetInputModeCallback SetInputModeCallbackDelegate = SetInputModeCallbackImpl;
         [MonoPInvokeCallback]
         private static void SetInputModeCallbackImpl(IntPtr ptr, Result result)
         {
@@ -3942,7 +4032,7 @@ namespace GameSDK.GameSDK
         public void SetInputMode(InputMode inputMode, SetInputModeHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.SetInputMode(MethodsPtr, inputMode, GCHandle.ToIntPtr(wrapped), SetInputModeCallbackImpl);
+            Methods.SetInputMode(MethodsPtr, inputMode, GCHandle.ToIntPtr(wrapped), SetInputModeCallbackDelegate);
         }
 
         public bool IsSelfMute()
@@ -4025,6 +4115,7 @@ namespace GameSDK.GameSDK
             }
         }
 
+        private static readonly FFIEvents.SettingsUpdateHandler OnSettingsUpdateDelegate = OnSettingsUpdateImpl;
         [MonoPInvokeCallback]
         private static void OnSettingsUpdateImpl(IntPtr ptr)
         {
@@ -4110,22 +4201,25 @@ namespace GameSDK.GameSDK
 
         internal AchievementManager(IntPtr ptr, IntPtr eventsPtr, ref FFIEvents events)
         {
-            if (eventsPtr == IntPtr.Zero) {
+            if (eventsPtr == IntPtr.Zero)
+            {
                 throw new ResultException(Result.InternalError);
             }
             InitEvents(eventsPtr, ref events);
             MethodsPtr = ptr;
-            if (MethodsPtr == IntPtr.Zero) {
+            if (MethodsPtr == IntPtr.Zero)
+            {
                 throw new ResultException(Result.InternalError);
             }
         }
 
         private void InitEvents(IntPtr eventsPtr, ref FFIEvents events)
         {
-            events.OnUserAchievementUpdate = OnUserAchievementUpdateImpl;
+            events.OnUserAchievementUpdate = OnUserAchievementUpdateDelegate;
             Marshal.StructureToPtr(events, eventsPtr, false);
         }
 
+        private static readonly FFIMethods.SetUserAchievementCallback SetUserAchievementCallbackDelegate = SetUserAchievementCallbackImpl;
         [MonoPInvokeCallback]
         private static void SetUserAchievementCallbackImpl(IntPtr ptr, Result result)
         {
@@ -4138,9 +4232,10 @@ namespace GameSDK.GameSDK
         public void SetUserAchievement(Int64 achievementId, byte percentComplete, SetUserAchievementHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.SetUserAchievement(MethodsPtr, achievementId, percentComplete, GCHandle.ToIntPtr(wrapped), SetUserAchievementCallbackImpl);
+            Methods.SetUserAchievement(MethodsPtr, achievementId, percentComplete, GCHandle.ToIntPtr(wrapped), SetUserAchievementCallbackDelegate);
         }
 
+        private static readonly FFIMethods.FetchUserAchievementsCallback FetchUserAchievementsCallbackDelegate = FetchUserAchievementsCallbackImpl;
         [MonoPInvokeCallback]
         private static void FetchUserAchievementsCallbackImpl(IntPtr ptr, Result result)
         {
@@ -4153,7 +4248,7 @@ namespace GameSDK.GameSDK
         public void FetchUserAchievements(FetchUserAchievementsHandler callback)
         {
             GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.FetchUserAchievements(MethodsPtr, GCHandle.ToIntPtr(wrapped), FetchUserAchievementsCallbackImpl);
+            Methods.FetchUserAchievements(MethodsPtr, GCHandle.ToIntPtr(wrapped), FetchUserAchievementsCallbackDelegate);
         }
 
         public Int32 CountUserAchievements()
@@ -4185,6 +4280,7 @@ namespace GameSDK.GameSDK
             return ret;
         }
 
+        private static readonly FFIEvents.UserAchievementUpdateHandler OnUserAchievementUpdateDelegate = OnUserAchievementUpdateImpl;
         [MonoPInvokeCallback]
         private static void OnUserAchievementUpdateImpl(IntPtr ptr, ref UserAchievement userAchievement)
         {

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 #endregion
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.Utils {
@@ -51,11 +52,12 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Utils {
 		}
 
 		public bool Remove(T2 item) => base.Remove(item);
-		public new IEnumerator<T2> GetEnumerator() => (IEnumerator<T2>)base.GetEnumerator();
 		public int IndexOf(T2 item) => base.IndexOf(item);
 
 		public void Insert(int index, T2 item) {
 			base.Insert(index, item);
 		}
+
+		public IEnumerator<T2> GetEnumerator() => Items.Cast<T2>().GetEnumerator();
 	}
 }

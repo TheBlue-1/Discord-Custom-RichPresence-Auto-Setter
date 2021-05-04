@@ -1,15 +1,21 @@
 ﻿#region
 using System.Collections.Generic;
 using GameSDK.GameSDK;
+using Newtonsoft.Json;
 #endregion
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
-	public class Lobby : ListableBase {
+	public class Lobby : ListableBase{
 		private uint _capacity;
 		private bool _locked;
 		private Dictionary<string, string> _metadata;
 		private long _ownerId;
 		private LobbyType _type;
+		[JsonConstructor]
+		public Lobby(string name) : base(name)
+		{
+
+		}
 		public static Lobby DefaultLobby => new("Default Lobby", 2, true, LobbyType.Private, 0, new Dictionary<string, string>());
 		public uint Capacity {
 			get => _capacity;

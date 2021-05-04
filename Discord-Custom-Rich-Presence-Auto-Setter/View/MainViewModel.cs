@@ -1,17 +1,20 @@
 ﻿#region
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using Discord_Custom_Rich_Presence_Auto_Setter.Models;
 using Discord_Custom_Rich_Presence_Auto_Setter.Service;
 using Discord_Custom_Rich_Presence_Auto_Setter.Utils;
+using Activity = Discord_Custom_Rich_Presence_Auto_Setter.Models.Activity;
 #endregion
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.View {
 	public class MainViewModel : INotifyPropertyChanged {
 		private ObservableCollection<IListable> _list;
 		private IListable _selected;
+		private string _status = "Application started";
 
 		public RelayCommand ActivitiesClick => new(() => { List = Data.Activities; }, () => List != Data.Activities);
 		public Visibility ActivityVisibility => SelectedActivity == null ? Visibility.Hidden : Visibility.Visible;
@@ -30,10 +33,19 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.View {
 
 		public RelayCommand ConfigsClick => new(() => { List = Data.Configs; }, () => List != Data.Configs);
 		public Visibility ConfigVisibility => SelectedConfig == null ? Visibility.Hidden : Visibility.Visible;
+		public Visibility AppVisibility => List == App ?  Visibility.Visible: Visibility.Hidden ;
+		public ApplicationSettings ApplicationSettings  =>Discord_Custom_Rich_Presence_Auto_Setter.App.Settings;
 
-		private FileSyncedConfigs Data { get; } = RichPresenceManager.Instance.Configs;
+		public string Status {
+			get => _status;
+			set { _status = value;OnPropertyChanged(); FileService.Instance.Log($"Status: {value}");}
+		}
+
+		private RichPresenceManager RichPresenceManager { get; }
+		private FileSyncedConfigs Data { get; } 
 		public RelayCommand DeleteClick => new(() => { List.Remove(Selected); }, () => Selected != null);
 
+		public RelayCommand OpenDataDirectory => new RelayCommand(() => { Process.Start("explorer.exe", FileService.ApplicationFolderPath); });
 		public RelayCommand DownClick => new(() => { List.Move(SelectedIndex, SelectedIndex + 1); }, () => Selected != null && SelectedIndex < List.Count - 1);
 		public RelayCommand DuplicateClick => new(() => { List.Insert(SelectedIndex + 1, Selected.Duplicate()); }, () => Selected != null);
 		public RelayCommand LobbiesClick => new(() => { List = Data.Lobbies; }, () => List != Data.Lobbies);
@@ -51,6 +63,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.View {
 			private set {
 				_list = value;
 				OnPropertyChanged();
+				OnPropertyChanged(nameof(AppVisibility));
 			}
 		}
 		public IListable Selected {
@@ -68,9 +81,24 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.View {
 		}
 		public int SelectedIndex { get; set; }
 
-		public MainViewModel() => List = App;
+		public MainViewModel() {
+			RichPresenceManager = new RichPresenceManager(ApplicationSettings.DefaultApplicationId);
+			Data = RichPresenceManager.Configs;
+			List = App;
+            RichPresenceManager.CurrentlyUsedConfigChanged += RichPresenceChanged;
+            RichPresenceManager.ExceptionOccured += ManagerExceptionOccured;
+			RichPresenceManager.Start();
+		}
 
-		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
+        private void ManagerExceptionOccured(System.Exception exception) {
+			Status = $"Error: '{exception.Message}'";
+		}
+
+        private void RichPresenceChanged(Config config) {
+			Status = config != null ? $"{config.Name} is currently set as your rich presence" : "No rich presence is currently set";
+		}
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 

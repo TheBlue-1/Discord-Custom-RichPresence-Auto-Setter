@@ -10,7 +10,6 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.View {
 		public MainWindow()
 		{
 
-			RichPresenceManager.Init(App.Settings.DefaultApplicationId);
 
 			InitializeComponent();
 		}

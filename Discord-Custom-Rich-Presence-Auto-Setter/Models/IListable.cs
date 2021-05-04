@@ -8,5 +8,6 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 		public string Name { get; }
 		public Guid Uuid { get; }
 		public IListable Duplicate();
+
 	}
 }

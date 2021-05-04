@@ -19,7 +19,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 			Discord = new Discord(ApplicationId, (ulong)CreateFlags.Default);
 			ActivityManager.RegisterCommand();
 
-			_updater = UpdatePeriodically(new TimeSpan(0, 0, 0, 0, 500));
+			_updater = UpdatePeriodically(App.Settings.DiscordCommunicationGap);
 		}
 
 		private async Task<Lobby> CreateLobby(Models.Lobby lobby) {
@@ -43,9 +43,14 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 			return await tcs.Task;
 		}
 
+
 		public async Task UpdateActivity(Activity activity = null, Models.Lobby lobby = null) {
 			activity ??= Activity.DefaultActivity;
 			lobby ??= Models.Lobby.DefaultLobby;
+
+
+
+
 			Lobby dcLobby = await CreateLobby(lobby);
 
 			GameSDK.GameSDK.Activity dcActivity = new() {
@@ -68,14 +73,19 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 			});
 			await tcs.Task;
 		}
-
-		public event Action GameLoopEnded;
+		public delegate void ExceptionHandler(Exception exception);
+		public event ExceptionHandler ExceptionOccured;
 
 		public async Task UpdatePeriodically(TimeSpan time) {
 			while (true) {
 				await Task.Delay(time);
+				try {
 				Discord.RunCallbacks();
-				GameLoopEnded?.Invoke();
+				}
+				catch (Exception e)
+				{
+					ExceptionOccured?.Invoke(e);
+				}
 			}
 
 			// ReSharper disable once FunctionNeverReturns

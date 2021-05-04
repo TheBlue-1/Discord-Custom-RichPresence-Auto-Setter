@@ -1,5 +1,6 @@
 ﻿#region
 using GameSDK.GameSDK;
+using Newtonsoft.Json;
 #endregion
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
@@ -21,6 +22,11 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 		private string _spectateSecret;
 		private long _startTimestamp;
 		private string _state;
+		[JsonConstructor]
+		public Activity(string name) : base(name)
+		{
+
+		}
 		public static Activity DefaultActivity => new("Default Activity", "running", "started", true, 0, ActivityType.Playing, 1,
 			2, null, null, null, null, null, null,
 			null, null, 0, 0);
