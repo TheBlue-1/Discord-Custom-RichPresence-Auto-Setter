@@ -4,7 +4,7 @@
 		protected bool ValuesCompare(T other);
 
 		public new static bool ValuesCompare<T1>(T1 original, T1 other)
-			where T1 : IValuesComparable<T1> => original.ValuesCompare(other);
+			where T1 : IValuesComparable<T1> => other == null ? original == null : original.ValuesCompare(other);
 	}
 
 	public interface IValuesComparable {

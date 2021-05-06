@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 #endregion
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.Utils {
-	
 	public class ApplicationSettings : ApplicationSettings.IApplicationSettings {
 		private const string SettingsFileName = "settings";
 
@@ -61,6 +60,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Utils {
 		private async void SettingChanged(object sender, PropertyChangedEventArgs e) {
 			await SaveSettings();
 		}
+
 		[SuppressMessage("ReSharper", "UnusedMemberInSuper.Global")]
 		public interface IApplicationSettings {
 			public long DefaultApplicationId { get; set; }

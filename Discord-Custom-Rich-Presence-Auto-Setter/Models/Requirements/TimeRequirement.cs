@@ -39,6 +39,15 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements {
 
 		TimeRequirement ICloneable<TimeRequirement>.Clone() => new(this);
 
-		bool IValuesComparable<TimeRequirement>.ValuesCompare(TimeRequirement other) => throw new NotImplementedException();
+		bool IValuesComparable<TimeRequirement>.ValuesCompare(TimeRequirement other) {
+			if (other.StartTime != StartTime) {
+				return false;
+			}
+			if (other.EndTime != EndTime) {
+				return false;
+			}
+
+			return other.ShouldBeMet == ShouldBeMet;
+		}
 	}
 }

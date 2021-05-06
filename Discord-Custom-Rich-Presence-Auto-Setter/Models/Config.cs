@@ -1,22 +1,22 @@
 ﻿#region
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Discord_Custom_Rich_Presence_Auto_Setter.Models.Interfaces;
 using Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements;
+using Discord_Custom_Rich_Presence_Auto_Setter.Utils;
 using Newtonsoft.Json;
 using ICloneable = Discord_Custom_Rich_Presence_Auto_Setter.Models.Interfaces.ICloneable;
 #endregion
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 	public class Config : ListableBase, ICloneable<Config>, IValuesComparable<Config> {
-		private Activity _activity;
+		private Activity _activity = new();
 		private Guid _activityId;
 		private long? _applicationId;
-		private Lobby _lobby;
+		private Lobby _lobby = new();
 		private Guid _lobbyId;
-		private ObservableCollection<Requirement> _requirements;
+		private ObservableCollection<Requirement> _requirements = new();
 
 		[JsonIgnore]
 		public Activity Activity {
@@ -69,26 +69,51 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 		}
 
 		[JsonConstructor]
-		public Config() { }
-
-		//public Config(string name, Activity activity, Lobby lobby, ObservableCollection<Requirement> requirements, long? applicationId) : base(name) {
-		//	Activity = activity;
-		//	Lobby = lobby;
-		//	Requirements = requirements;
-		//	ApplicationId = applicationId;
-		//}
+		public Config() {
+			_lobbyId = _lobby.Uuid;
+			_activityId = _activity.Uuid;
+		}
 
 		private Config(Config config) : base(config.Name) {
 			ApplicationId = config.ApplicationId;
 
 			Activity = ICloneable.Clone(config.Activity);
 			Lobby = ICloneable.Clone(config.Lobby);
-			Lobby.Metadata = new Dictionary<string, string>(config.Lobby.Metadata);
+			Lobby.Metadata = new ObservableDictionary<string, string>(config.Lobby.Metadata);
 			Requirements = new ObservableCollection<Requirement>(config.Requirements.Select(ICloneable.Clone));
 		}
 
 		Config ICloneable<Config>.Clone() => new(this);
 
-		bool IValuesComparable<Config>.ValuesCompare(Config other) => throw new NotImplementedException();
+		bool IValuesComparable<Config>.ValuesCompare(Config other) {
+			if (other.ApplicationId != ApplicationId) {
+				return false;
+			}
+			if (other.LobbyId != LobbyId) {
+				return false;
+			}
+			if (other.ActivityId != ActivityId) {
+				return false;
+			}
+			if (!IValuesComparable.ValuesCompare(other.Lobby, Lobby)) {
+				return false;
+			}
+			if (!IValuesComparable.ValuesCompare(other.Activity, Activity)) {
+				return false;
+			}
+
+			if (other.Requirements?.Count != Requirements?.Count) {
+				return false;
+			}
+			if (Requirements == null) {
+				return true;
+			}
+
+			if (Requirements.Where((t, i) => other.Requirements[i] != t).Any()) {
+				return false;
+			}
+
+			return other.Name != Name;
+		}
 	}
 }
