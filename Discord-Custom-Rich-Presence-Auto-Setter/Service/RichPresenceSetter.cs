@@ -7,6 +7,8 @@ using Activity = Discord_Custom_Rich_Presence_Auto_Setter.Models.Activity;
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 	public class RichPresenceSetter : IDisposable {
+		public delegate void ExceptionHandler(Exception exception);
+
 		private readonly Task _updater;
 		private ActivityManager ActivityManager => Discord.GetActivityManager();
 		public long ApplicationId { get; }
@@ -21,6 +23,8 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 
 			_updater = UpdatePeriodically(App.Settings.DiscordCommunicationGap);
 		}
+
+		public event ExceptionHandler ExceptionOccurred;
 
 		private async Task<Lobby> CreateLobby(Models.Lobby lobby) {
 			LobbyTransaction transaction = LobbyManager.GetLobbyCreateTransaction();
@@ -43,13 +47,9 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 			return await tcs.Task;
 		}
 
-
 		public async Task UpdateActivity(Activity activity = null, Models.Lobby lobby = null) {
-			activity ??= Activity.DefaultActivity;
-			lobby ??= Models.Lobby.DefaultLobby;
-
-
-
+			activity ??= new Activity();
+			lobby ??= new Models.Lobby();
 
 			Lobby dcLobby = await CreateLobby(lobby);
 
@@ -73,18 +73,15 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 			});
 			await tcs.Task;
 		}
-		public delegate void ExceptionHandler(Exception exception);
-		public event ExceptionHandler ExceptionOccured;
 
 		public async Task UpdatePeriodically(TimeSpan time) {
 			while (true) {
 				await Task.Delay(time);
 				try {
-				Discord.RunCallbacks();
+					Discord.RunCallbacks();
 				}
-				catch (Exception e)
-				{
-					ExceptionOccured?.Invoke(e);
+				catch (Exception e) {
+					ExceptionOccurred?.Invoke(e);
 				}
 			}
 

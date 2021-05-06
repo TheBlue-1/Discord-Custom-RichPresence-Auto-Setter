@@ -3,19 +3,20 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord_Custom_Rich_Presence_Auto_Setter.Models;
+using Discord_Custom_Rich_Presence_Auto_Setter.Models.Interfaces;
 using Discord_Custom_Rich_Presence_Auto_Setter.Utils;
+using ICloneable = Discord_Custom_Rich_Presence_Auto_Setter.Models.Interfaces.ICloneable;
 #endregion
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
-	public  class RichPresenceManager:IDisposable {
-		private RichPresenceSetter _rpc;
-		private  Task _updater;
-		public delegate void ExceptionHandler(Exception exception);
-		public event ExceptionHandler ExceptionOccured;
-
-
+	public class RichPresenceManager : IDisposable {
 		public delegate void CurrentlyUsedConfigChangedHandler(Config config);
-		public event CurrentlyUsedConfigChangedHandler CurrentlyUsedConfigChanged;
+
+		public delegate void ExceptionHandler(Exception exception);
+
+		private Config _currentConfig;
+		private RichPresenceSetter _rpc;
+		private Task _updater;
 		public FileSyncedConfigs Configs { get; } = new();
 
 		private long DefaultApplicationId { get; }
@@ -26,27 +27,20 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 				_rpc?.Dispose();
 				_rpc = value;
 				if (_rpc != null) {
-					_rpc.ExceptionOccured += (Exception e) => ExceptionOccured?.Invoke(e);
+					_rpc.ExceptionOccurred += e => ExceptionOccurred?.Invoke(e);
 				}
 			}
 		}
 
 		public RichPresenceManager(long defaultApplicationId) => DefaultApplicationId = defaultApplicationId;
+		public event CurrentlyUsedConfigChangedHandler CurrentlyUsedConfigChanged;
+		public event ExceptionHandler ExceptionOccurred;
 
 		public void Start() {
-			if (_updater != null) throw new InvalidOperationException("RP-Manager already running");
-			_updater = UpdatePeriodically(App.Settings.RequirementCheckSpan);
-
-		}
-		public async Task UpdatePeriodically(TimeSpan time)
-		{
-			while (true)
-			{
-				await Task.Delay(time);
-				Update();
+			if (_updater != null) {
+				throw new InvalidOperationException("RP-Manager already running");
 			}
-
-			// ReSharper disable once FunctionNeverReturns
+			_updater = UpdatePeriodically(App.Settings.RequirementCheckSpan);
 		}
 
 		private async void Update() {
@@ -60,14 +54,21 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 			await UseConfig(null);
 		}
 
-		private Config _currentConfig;
+		public async Task UpdatePeriodically(TimeSpan time) {
+			while (true) {
+				await Task.Delay(time);
+				Update();
+			}
+
+			// ReSharper disable once FunctionNeverReturns
+		}
 
 		private async Task UseConfig(Config config) {
-			if(config.ValuesEqual(_currentConfig)) {
+			if (IValuesComparable.ValuesCompare(config, _currentConfig)) {
 				return;
 			}
 
-			_currentConfig = new Config(config,true);
+			_currentConfig = ICloneable.Clone(config);
 
 			if (config == null) {
 				Rpc = null;
@@ -81,14 +82,13 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 			if (Rpc == null) {
 				throw new InvalidOperationException("no default application id set");
 			}
-			await Rpc.UpdateActivity(config.Activity , config.Lobby);
+			await Rpc.UpdateActivity(config.Activity, config.Lobby);
 			CurrentlyUsedConfigChanged?.Invoke(config);
 		}
 
 		public void Dispose() {
 			_rpc?.Dispose();
 			_updater?.Dispose();
-
 		}
 	}
 }

@@ -1,10 +1,12 @@
 ﻿#region
+using System;
+using Discord_Custom_Rich_Presence_Auto_Setter.Models.Interfaces;
 using GameSDK.GameSDK;
 using Newtonsoft.Json;
 #endregion
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
-	public class Activity : ListableBase {
+	public class Activity : ListableBase, ICloneable<Activity>, IValuesComparable<Activity> {
 		private ActivityType _activityType;
 		private long _applicationId;
 		private int _currentPartySize;
@@ -22,14 +24,6 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 		private string _spectateSecret;
 		private long _startTimestamp;
 		private string _state;
-		[JsonConstructor]
-		public Activity(string name) : base(name)
-		{
-
-		}
-		public static Activity DefaultActivity => new("Default Activity", "running", "started", true, 0, ActivityType.Playing, 1,
-			2, null, null, null, null, null, null,
-			null, null, 0, 0);
 		public ActivityType ActivityType {
 			get => _activityType;
 			set {
@@ -151,29 +145,31 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 			}
 		}
 
-		public Activity(string name, string state, string details, bool instance, long applicationId, ActivityType activityType, long startTimestamp,
-			long endTimestamp, string largeImage, string largeText, string smallImage, string smallText, string matchSecret, string joinSecret,
-			string spectateSecret, string partyId, int maxPartySize, int currentPartySize) : base(name) {
-			State = state;
-			Details = details;
-			Instance = instance;
-			ApplicationId = applicationId;
-			ActivityType = activityType;
-			StartTimestamp = startTimestamp;
-			EndTimestamp = endTimestamp;
-			LargeImage = largeImage;
-			LargeText = largeText;
-			SmallImage = smallImage;
-			SmallText = smallText;
-			MatchSecret = matchSecret;
-			JoinSecret = joinSecret;
-			SpectateSecret = spectateSecret;
-			PartyId = partyId;
-			MaxPartySize = maxPartySize;
-			CurrentPartySize = currentPartySize;
-		}
+		[JsonConstructor]
+		public Activity() { }
 
-		public Activity(Activity activity) : base(activity.Name) {
+		//public Activity(string name, string state, string details, bool instance, long applicationId, ActivityType activityType, long startTimestamp,
+		//	long endTimestamp, string largeImage, string largeText, string smallImage, string smallText, string matchSecret, string joinSecret,
+		//	string spectateSecret, string partyId, int maxPartySize, int currentPartySize) : base(name) {
+		//	State = state;
+		//	Details = details;
+		//	Instance = instance;
+		//	ApplicationId = applicationId;
+		//	ActivityType = activityType;
+		//	StartTimestamp = startTimestamp;
+		//	EndTimestamp = endTimestamp;
+		//	LargeImage = largeImage;
+		//	LargeText = largeText;
+		//	SmallImage = smallImage;
+		//	SmallText = smallText;
+		//	MatchSecret = matchSecret;
+		//	JoinSecret = joinSecret;
+		//	SpectateSecret = spectateSecret;
+		//	PartyId = partyId;
+		//	MaxPartySize = maxPartySize;
+		//	CurrentPartySize = currentPartySize;
+		//}
+		protected Activity(Activity activity) : base(activity.Name) {
 			State = activity.State;
 			Details = activity.Details;
 			Instance = activity.Instance;
@@ -193,6 +189,8 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 			CurrentPartySize = activity.CurrentPartySize;
 		}
 
-		public override IListable Duplicate() => new Activity(this);
+		Activity ICloneable<Activity>.Clone() => new(this);
+
+		bool IValuesComparable<Activity>.ValuesCompare(Activity other) => throw new NotImplementedException();
 	}
 }

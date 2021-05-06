@@ -1,23 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿#region
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements;
+#endregion
 
-namespace Discord_Custom_Rich_Presence_Auto_Setter.View.Elements
-{
-public    class RequirementView:Grid
-    {
-		
-	
+namespace Discord_Custom_Rich_Presence_Auto_Setter.View.Elements {
+	public class RequirementView : Grid {
+		public static readonly DependencyProperty RequirementProperty = DependencyProperty.Register("Requirement", typeof (Requirement),
+			typeof (RequirementView), new PropertyMetadata(RequirementChanged));
 
-		public static readonly DependencyProperty RequirementProperty =
-			DependencyProperty.Register(
-				"Requirement", typeof(Requirement), typeof(RequirementView),new PropertyMetadata(new PropertyChangedCallback(RequirementChanged)));
+		public Requirement Requirement {
+			get => (Requirement)GetValue(RequirementProperty);
+			set => SetValue(RequirementProperty, value);
+		}
+
+		private void AddAt(UIElement element, int row, int column) {
+			SetRow(element, row);
+			SetColumn(element, column);
+			Children.Add(element);
+		}
+
+		private void BindText(FrameworkElement element, string value) {
+			Binding binding = new() { Source = value };
+			element.SetBinding(TextBox.TextProperty, binding);
+		}
 
 		private static void RequirementChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
 			RequirementView view = (RequirementView)d;
@@ -28,7 +35,7 @@ public    class RequirementView:Grid
 			switch (Requirement) {
 				case TimeRequirement timeRequirement : break;
 				case DayRequirement dayRequirement : break;
-				case ProcessRequirement processRequirement:break;
+				case ProcessRequirement processRequirement : break;
 			}
 		}
 
@@ -39,60 +46,24 @@ public    class RequirementView:Grid
 			ColumnDefinitions.Add(new ColumnDefinition());
 			ColumnDefinitions.Add(new ColumnDefinition());
 			for (int i = 0; i < rows; i++) {
-				RowDefinitions.Add(new RowDefinition(){Height = new GridLength(30)});
-
+				RowDefinitions.Add(new RowDefinition { Height = new GridLength(30) });
 			}
 		}
 
-		private void AddAt(UIElement element,int row, int column) {
-			SetRow(element,row);
-			SetColumn(element,column);
-			Children.Add(element);
+		private void ShowDayRequirement(DayRequirement dayRequirement) { }
+
+		private void ShowProcessRequirement(ProcessRequirement processRequirement) { }
+
+		private void ShowTimeRequirement(TimeRequirement timeRequirement) {
+			SetUpGrid(2);
+			Label startTimeLabel = new() { Content = "From" };
+			Label endTimeLabel = new() { Content = "To" };
+			TextBox startTime = new();
+			TextBox endTime = new();
+			AddAt(startTimeLabel, 0, 0);
+			AddAt(startTime, 0, 1);
+			AddAt(endTimeLabel, 1, 0);
+			AddAt(endTime, 1, 1);
 		}
-
-		private void BindText(TextBox element, string value) {
-			var binding = new Binding();
-			binding.Source = value;
-			element.SetBinding(TextBox.TextProperty, binding);
-		}
-
-		private void ShowTimeRequirement(TimeRequirement timeRequirement)
-		{SetUpGrid(2);
-			Label startTimeLabel = new Label() { Content = "From" };
-			Label endTimeLabel = new Label() { Content = "To" };
-			TextBox startTime = new TextBox() {};
-			TextBox endTime = new TextBox() {};
-			AddAt(startTimeLabel,0,0);
-			AddAt(startTime,0,1);
-			AddAt(endTimeLabel,1,0);
-			AddAt(endTime,1,1);
-			
-		}
-
-		private void ShowDayRequirement(DayRequirement dayRequirement)
-		{
-
-		}
-
-		private void ShowProcessRequirement(ProcessRequirement processRequirement)
-		{
-
-		}
-
-
-
-
-		public Requirement Requirement
-		{
-			get { return (Requirement)GetValue(RequirementProperty); }
-			set { SetValue(RequirementProperty, value); }
-
-		}
-
-		public RequirementView() {
-			
-		}
-
-
 	}
 }

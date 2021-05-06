@@ -52,12 +52,12 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Utils {
 		}
 
 		public bool Remove(T2 item) => base.Remove(item);
+
+		public new IEnumerator<T2> GetEnumerator() => Items.Cast<T2>().GetEnumerator();
 		public int IndexOf(T2 item) => base.IndexOf(item);
 
 		public void Insert(int index, T2 item) {
 			base.Insert(index, item);
 		}
-
-		public IEnumerator<T2> GetEnumerator() => Items.Cast<T2>().GetEnumerator();
 	}
 }

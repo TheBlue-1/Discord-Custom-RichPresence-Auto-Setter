@@ -3,23 +3,21 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord_Custom_Rich_Presence_Auto_Setter.Models;
-using Discord_Custom_Rich_Presence_Auto_Setter.Utils.Extensions;
 #endregion
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.Utils {
 	public class FileSyncedConfigs {
-		public GeneralizedObservableList<IListable, Activity> Activities { get; }
 		private const string ActivitiesFileName = "activities";
-		public GeneralizedObservableList<IListable, Config> Configs { get; }
 		private const string ConfigsFileName = "configs";
-		public GeneralizedObservableList<IListable, Lobby> Lobbies { get; }
-		private IEnumerable<Lobby> EnumerableLobbies => Lobbies;
-		private IEnumerable<Activity> EnumerableActivities => Activities;
 		private const string LobbiesFileName = "lobbies";
+		public GeneralizedObservableList<IListable, Activity> Activities { get; }
+		public GeneralizedObservableList<IListable, Config> Configs { get; }
+		private IEnumerable<Activity> EnumerableActivities => Activities;
+		private IEnumerable<Lobby> EnumerableLobbies => Lobbies;
+		public GeneralizedObservableList<IListable, Lobby> Lobbies { get; }
 		private object SaveActivitiesLock { get; } = new();
 		private object SaveConfigsLock { get; } = new();
 		private object SaveLobbiesLock { get; } = new();
@@ -33,11 +31,9 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Utils {
 
 		public FileSyncedConfigs() {
 			Lobbies = FileService.Instance.JsonFileExists(LobbiesFileName) ? LoadLobbies() : new GeneralizedObservableList<IListable, Lobby>();
-			Activities = FileService.Instance.JsonFileExists(ActivitiesFileName)
-				? LoadActivities()
-				: new GeneralizedObservableList<IListable, Activity>();
+			Activities = FileService.Instance.JsonFileExists(ActivitiesFileName) ? LoadActivities() : new GeneralizedObservableList<IListable, Activity>();
 			Configs = FileService.Instance.JsonFileExists(ConfigsFileName) ? LoadConfigs() : new GeneralizedObservableList<IListable, Config>();
-			
+
 			Configs.CollectionChanged += ConfigsChanged;
 			Lobbies.CollectionChanged += LobbiesChanged;
 			Activities.CollectionChanged += ActivitiesChanged;
@@ -62,24 +58,24 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Utils {
 			await SaveConfigs();
 		}
 
-		private GeneralizedObservableList<IListable, Activity> LoadActivities() =>
-			 FileService.Instance.ReadJsonFromFile<GeneralizedObservableList<IListable, Activity>>(ActivitiesFileName);
+		private static GeneralizedObservableList<IListable, Activity> LoadActivities() =>
+			FileService.Instance.ReadJsonFromFile<GeneralizedObservableList<IListable, Activity>>(ActivitiesFileName);
 
-		private  GeneralizedObservableList<IListable, Config> LoadConfigs() {
+		private GeneralizedObservableList<IListable, Config> LoadConfigs() {
 			if (Lobbies == null || Activities == null) {
 				throw new InvalidOperationException("Lobbies and activities must be loaded before configs");
 			}
-			GeneralizedObservableList<IListable, Config> configs=  FileService.Instance.ReadJsonFromFile<GeneralizedObservableList<IListable, Config>>(ConfigsFileName);
+			GeneralizedObservableList<IListable, Config> configs =
+				FileService.Instance.ReadJsonFromFile<GeneralizedObservableList<IListable, Config>>(ConfigsFileName);
 			foreach (Config config in configs) {
 				config.Lobby = EnumerableLobbies.FirstOrDefault(lobby => lobby.Uuid == config.LobbyId);
 				config.Activity = EnumerableActivities.FirstOrDefault(activity => activity.Uuid == config.LobbyId);
-
 			}
 			return configs;
 		}
 
-		private  GeneralizedObservableList<IListable, Lobby> LoadLobbies() =>
-			 FileService.Instance.ReadJsonFromFile<GeneralizedObservableList<IListable, Lobby>>(LobbiesFileName);
+		private static GeneralizedObservableList<IListable, Lobby> LoadLobbies() =>
+			FileService.Instance.ReadJsonFromFile<GeneralizedObservableList<IListable, Lobby>>(LobbiesFileName);
 
 		private async void LobbiesChanged(object sender, NotifyCollectionChangedEventArgs e) {
 			await SaveLobbies();

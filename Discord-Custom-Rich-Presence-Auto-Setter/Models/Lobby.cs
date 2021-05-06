@@ -1,22 +1,18 @@
 ﻿#region
+using System;
 using System.Collections.Generic;
+using Discord_Custom_Rich_Presence_Auto_Setter.Models.Interfaces;
 using GameSDK.GameSDK;
 using Newtonsoft.Json;
 #endregion
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
-	public class Lobby : ListableBase{
+	public class Lobby : ListableBase, ICloneable<Lobby>, IValuesComparable<Lobby> {
 		private uint _capacity;
 		private bool _locked;
 		private Dictionary<string, string> _metadata;
 		private long _ownerId;
 		private LobbyType _type;
-		[JsonConstructor]
-		public Lobby(string name) : base(name)
-		{
-
-		}
-		public static Lobby DefaultLobby => new("Default Lobby", 2, true, LobbyType.Private, 0, new Dictionary<string, string>());
 		public uint Capacity {
 			get => _capacity;
 			set {
@@ -54,15 +50,18 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 			}
 		}
 
-		public Lobby(string name, uint capacity, bool locked, LobbyType type, long ownerId, Dictionary<string, string> metadata) : base(name) {
-			Capacity = capacity;
-			Locked = locked;
-			Type = type;
-			OwnerId = ownerId;
-			Metadata = metadata;
-		}
+		[JsonConstructor]
+		public Lobby() { }
 
-		public Lobby(Lobby lobby) : base(lobby.Name) {
+		//public Lobby(string name, uint capacity, bool locked, LobbyType type, long ownerId, Dictionary<string, string> metadata) : base(name) {
+		//	Capacity = capacity;
+		//	Locked = locked;
+		//	Type = type;
+		//	OwnerId = ownerId;
+		//	Metadata = metadata;
+		//}
+
+		protected Lobby(Lobby lobby) : base(lobby.Name) {
 			Capacity = lobby.Capacity;
 			Locked = lobby.Locked;
 			Type = lobby.Type;
@@ -70,6 +69,8 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 			Metadata = lobby.Metadata;
 		}
 
-		public override IListable Duplicate() => new Lobby(this);
+		Lobby ICloneable<Lobby>.Clone() => new(this);
+
+		bool IValuesComparable<Lobby>.ValuesCompare(Lobby other) => throw new NotImplementedException();
 	}
 }

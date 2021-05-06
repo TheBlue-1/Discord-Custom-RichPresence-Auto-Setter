@@ -56,7 +56,8 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <TextBlock  Grid.Row="0" Grid.Column="1" TextAlignment="Center" Background="LightSlateGray" Text="{Binding Status}"></TextBlock>
+        <TextBlock Grid.Row="0" Grid.Column="1" TextAlignment="Center" Background="LightSlateGray"
+                   Text="{Binding Status}" />
 
         <Grid Grid.Column="1" Grid.Row="1">
             <Grid Visibility="{Binding LobbyVisibility}">
@@ -190,8 +191,8 @@
             </Grid>
             <Grid Visibility="{Binding AppVisibility}">
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition Height="30px"/>
+                    <RowDefinition />
+                    <RowDefinition Height="30px" />
                 </Grid.RowDefinitions>
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -208,7 +209,7 @@
                             <RowDefinition />
                         </Grid.RowDefinitions>
 
-                        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" >
+                        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
                             Restart the application to make sure all changes get applied.
                         </Label>
 
@@ -219,7 +220,7 @@
                         <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding DiscordCommunicationGap}" />
                         <Label Grid.Row="3" Grid.Column="0">Requirement Check Span</Label>
                         <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding RequirementCheckSpan}" />
-</Grid>
+                    </Grid>
                 </ScrollViewer>
                 <Button Grid.Row="1" Grid.Column="0" Command="{Binding OpenDataDirectory}">Show log files</Button>
 

@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿#region
 using System.Windows.Controls;
+#endregion
 
-namespace Discord_Custom_Rich_Presence_Auto_Setter.View.Elements
-{
-  public  class GeneralizedListView:ListView
-    {
-    }
+namespace Discord_Custom_Rich_Presence_Auto_Setter.View.Elements {
+	public class GeneralizedListView : ListView { }
 }

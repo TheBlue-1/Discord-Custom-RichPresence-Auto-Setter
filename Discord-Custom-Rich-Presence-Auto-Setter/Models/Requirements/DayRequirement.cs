@@ -1,9 +1,10 @@
 ﻿#region
 using System;
+using Discord_Custom_Rich_Presence_Auto_Setter.Models.Interfaces;
 #endregion
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements {
-	public class DayRequirement : Requirement {
+	public class DayRequirement : Requirement, ICloneable<DayRequirement>, IValuesComparable<DayRequirement> {
 		private NumberEquality? _dateEquality;
 		private DateTime? _maxDate;
 		private DateTime? _minDate;
@@ -50,14 +51,6 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements {
 			}
 		}
 
-		public DayRequirement(DayRequirement dayRequirement) {
-			WeekDay = dayRequirement.WeekDay;
-		MinDate	=dayRequirement.MinDate;
-		DateEquality	=dayRequirement.DateEquality;
-		MaxDate	=dayRequirement.MaxDate;
-		ShouldBeMet	=dayRequirement.ShouldBeMet;
-		}
-
 		//isMonday,is equal date usw
 		public DayOfWeek? WeekDay {
 			get => _weekDay;
@@ -65,6 +58,32 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements {
 				_weekDay = value;
 				OnPropertyChanged();
 			}
+		}
+		public DayRequirement() { }
+
+		protected DayRequirement(DayRequirement dayRequirement) : base(dayRequirement.ShouldBeMet) {
+			WeekDay = dayRequirement.WeekDay;
+			MinDate = dayRequirement.MinDate;
+			DateEquality = dayRequirement.DateEquality;
+			MaxDate = dayRequirement.MaxDate;
+		}
+
+		DayRequirement ICloneable<DayRequirement>.Clone() => new(this);
+
+		bool IValuesComparable<DayRequirement>.ValuesCompare(DayRequirement other) {
+			if (other.MaxDate == MaxDate) {
+				return false;
+			}
+			if (other.WeekDay != WeekDay) {
+				return false;
+			}
+			if (other.DateEquality != DateEquality) {
+				return false;
+			}
+			if (other.MinDate != MinDate) {
+				return false;
+			}
+			return other.ShouldBeMet != ShouldBeMet;
 		}
 
 		public enum NumberEquality {
