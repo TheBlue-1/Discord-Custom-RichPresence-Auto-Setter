@@ -56,7 +56,7 @@ jobs:
 
     env:
       Solution_Name: Discord-Custom-Rich-Presence-Auto-Setter.sln # Replace with your solution name, i.e. MyWpfApp.sln.
-      # Test_Project_Path: your-test-project-path                 # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
+      # Test_Project_Path: your-test-project-path # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
       Wap_Project_Directory: Discord-Custom-Rich-Presence-Auto-Setter # Replace with the Wap project directory relative to the solution, i.e. MyWpfApp.Package.
       Wap_Project_Path: Discord-Custom-Rich-Presence-Auto-Setter/Discord-Custom-Rich-Presence-Auto-Setter.csproj # Replace with the path to your Wap project, i.e. MyWpf.App.Package\MyWpfApp.Package.wapproj.
 
@@ -103,8 +103,8 @@ jobs:
           Configuration: ${{ matrix.configuration }}
 
       # Remove the pfx
-      - name: Remove the pfx
-        run: Remove-Item -path $env:Wap_Project_Directory\$env:Signing_Certificate
+      # - name: Remove the pfx
+      #   run: Remove-Item -path $env:Wap_Project_Directory\$env:Signing_Certificate
 
       # Upload the MSIX package: https://github.com/marketplace/actions/upload-artifact
       - name: Upload build artifacts

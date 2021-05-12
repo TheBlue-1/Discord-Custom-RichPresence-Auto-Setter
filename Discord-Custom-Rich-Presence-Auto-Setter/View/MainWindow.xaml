@@ -179,9 +179,25 @@
                         <Label Grid.Row="0" Grid.Column="0">Name</Label>
                         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name}" />
                         <Label Grid.Row="1" Grid.Column="0">Activity</Label>
-                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Activity}" />
+                        <ComboBox Grid.Row="1" Grid.Column="1"  SelectedValue="{Binding Activity}" ItemsSource="{Binding DataContext.Data.Activities, RelativeSource={RelativeSource AncestorType=Window}}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                  <Grid>
+                                      <TextBlock Text="{Binding Name}"></TextBlock>
+                                  </Grid>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                         <Label Grid.Row="2" Grid.Column="0">Lobby</Label>
-                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Lobby}" />
+                        <ComboBox Grid.Row="2" Grid.Column="1"  SelectedValue="{Binding Lobby}" ItemsSource="{Binding DataContext.Data.Lobbies, RelativeSource={RelativeSource AncestorType=Window}}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <TextBlock Text="{Binding Name}"></TextBlock>
+                                    </Grid>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                         <Label Grid.Row="3" Grid.Column="0">Requirements</Label>
                         <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Requirements}" />
                         <Label Grid.Row="4" Grid.Column="0">ApplicationId</Label>

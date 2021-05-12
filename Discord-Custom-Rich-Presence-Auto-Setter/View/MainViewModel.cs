@@ -37,7 +37,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.View {
 
 		public RelayCommand ConfigsClick => new(() => { List = Data.Configs; }, () => List != Data.Configs);
 		public Visibility ConfigVisibility => SelectedConfig == null ? Visibility.Hidden : Visibility.Visible;
-		private FileSyncedConfigs Data { get; }
+		public FileSyncedConfigs Data { get; }
 		public RelayCommand DeleteClick => new(() => { List.Remove(Selected); }, () => Selected != null);
 		public RelayCommand DownClick => new(() => { List.Move(SelectedIndex, SelectedIndex + 1); }, () => Selected != null && SelectedIndex < List.Count - 1);
 		public RelayCommand DuplicateClick => new(() => { List.Insert(SelectedIndex + 1, ICloneable.Clone(Selected)); }, () => Selected != null);
