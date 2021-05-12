@@ -9,7 +9,7 @@
   <Identity
     Name="30011e53-4643-448f-b6e4-b0c0b7be8738"
     Publisher="CN=TheBlue-1"
-    Version="1.0.0.0" />
+    Version="0.0.0.0" />
 
   <Properties>
     <DisplayName>DCRPAS-Package</DisplayName>
