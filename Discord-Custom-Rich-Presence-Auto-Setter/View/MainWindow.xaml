@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:view="clr-namespace:Discord_Custom_Rich_Presence_Auto_Setter.View"
+        xmlns:elements="clr-namespace:Discord_Custom_Rich_Presence_Auto_Setter.View.Elements"
         mc:Ignorable="d"
         Title="Discord Rich-Presence Setter" MinHeight="150" MinWidth="850">
     <Window.DataContext>
@@ -82,9 +83,9 @@
                         <Label Grid.Row="1" Grid.Column="0">Capacity</Label>
                         <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Capacity}" />
                         <Label Grid.Row="2" Grid.Column="0">Locked</Label>
-                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Locked}" />
+                        <ComboBox Grid.Row="2" Grid.Column="1" SelectedValue="{Binding Locked}" ItemsSource="{Binding DataContext.HelperModel.Boolean, RelativeSource={RelativeSource AncestorType=Window}}"></ComboBox>
                         <Label Grid.Row="3" Grid.Column="0">Type</Label>
-                        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Type}" />
+                        <ComboBox Grid.Row="3" Grid.Column="1" SelectedValue="{Binding Type}" ItemsSource="{Binding DataContext.HelperModel.LobbyType, RelativeSource={RelativeSource AncestorType=Window}}"></ComboBox>
                         <Label Grid.Row="4" Grid.Column="0">OwnerId</Label>
                         <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding OwnerId}" />
                         <Label Grid.Row="5" Grid.Column="0">Metadata</Label>
@@ -124,7 +125,7 @@
                         <Label Grid.Row="0" Grid.Column="0">Name</Label>
                         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name}" />
                         <Label Grid.Row="1" Grid.Column="0">Activity Type</Label>
-                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ActivityType}" />
+                        <ComboBox Grid.Row="1" Grid.Column="1" SelectedValue="{Binding ActivityType}" ItemsSource="{Binding DataContext.HelperModel.ActivityType, RelativeSource={RelativeSource AncestorType=Window}}"></ComboBox>
                         <Label Grid.Row="2" Grid.Column="0">ApplicationId</Label>
                         <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ApplicationId}" />
                         <Label Grid.Row="3" Grid.Column="0">State</Label>
@@ -132,7 +133,7 @@
                         <Label Grid.Row="4" Grid.Column="0">Details</Label>
                         <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Details}" />
                         <Label Grid.Row="5" Grid.Column="0">Instance</Label>
-                        <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Instance}" />
+                        <ComboBox Grid.Row="5" Grid.Column="1" SelectedValue="{Binding Instance}" ItemsSource="{Binding DataContext.HelperModel.Boolean, RelativeSource={RelativeSource AncestorType=Window}}"></ComboBox>
                         <Label Grid.Row="6" Grid.Column="0">StartTimestamp</Label>
                         <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding StartTimestamp}" />
                         <Label Grid.Row="7" Grid.Column="0">EndTimestamp</Label>
@@ -202,6 +203,7 @@
                         <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Requirements}" />
                         <Label Grid.Row="4" Grid.Column="0">ApplicationId</Label>
                         <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding ApplicationId}" />
+                        <elements:RequirementView  Grid.Row="4" Grid.Column="1" ></elements:RequirementView>
                     </Grid>
                 </ScrollViewer>
             </Grid>

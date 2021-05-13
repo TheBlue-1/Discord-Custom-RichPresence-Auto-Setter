@@ -8,8 +8,10 @@ using System.Windows;
 using Discord_Custom_Rich_Presence_Auto_Setter.Models;
 using Discord_Custom_Rich_Presence_Auto_Setter.Service;
 using Discord_Custom_Rich_Presence_Auto_Setter.Utils;
+using GameSDK.GameSDK;
 using Activity = Discord_Custom_Rich_Presence_Auto_Setter.Models.Activity;
 using ICloneable = Discord_Custom_Rich_Presence_Auto_Setter.Models.Interfaces.ICloneable;
+using Lobby = Discord_Custom_Rich_Presence_Auto_Setter.Models.Lobby;
 #endregion
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.View {
@@ -30,6 +32,9 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.View {
 			}
 		}, () => List != App);
 		private ObservableCollection<IListable> App { get; } = new();
+
+		public record ViewHelperModel (ActivityType[] ActivityType,LobbyType[] LobbyType,bool[] Boolean);
+		public ViewHelperModel HelperModel { get; }= new ViewHelperModel(Enum.GetValues<ActivityType>(),Enum.GetValues<LobbyType>(),new []{false, true });
 
 		public RelayCommand AppClick => new(() => { List = App; }, () => List != App);
 		public ApplicationSettings ApplicationSettings => Discord_Custom_Rich_Presence_Auto_Setter.App.Settings;

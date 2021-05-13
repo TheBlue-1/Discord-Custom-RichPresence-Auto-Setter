@@ -1,9 +1,10 @@
 ﻿#region
+#endregion
+
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements;
-#endregion
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.View.Elements {
 	public class RequirementView : Grid {
