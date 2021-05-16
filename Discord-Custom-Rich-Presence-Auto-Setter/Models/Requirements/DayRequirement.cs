@@ -1,6 +1,7 @@
 ﻿#region
 using System;
 using Discord_Custom_Rich_Presence_Auto_Setter.Models.Interfaces;
+using Discord_Custom_Rich_Presence_Auto_Setter.Utils;
 #endregion
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements {
@@ -28,6 +29,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements {
 				return WeekDay == default || now.DayOfWeek == WeekDay;
 			}
 		}
+		public override SelectionConverter<RequirementType> Type { get; } = new SelectionConverter<RequirementType>(RequirementType.Day);
 
 		public NumberEquality? DateEquality {
 			get => _dateEquality;

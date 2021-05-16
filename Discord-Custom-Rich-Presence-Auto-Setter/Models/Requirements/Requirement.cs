@@ -3,6 +3,8 @@ using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Discord_Custom_Rich_Presence_Auto_Setter.Models.Interfaces;
+using Discord_Custom_Rich_Presence_Auto_Setter.Utils;
+using Newtonsoft.Json;
 using ICloneable = Discord_Custom_Rich_Presence_Auto_Setter.Models.Interfaces.ICloneable;
 #endregion
 
@@ -17,6 +19,18 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements {
 				OnPropertyChanged();
 			}
 		}
+		[JsonIgnore]
+		public abstract SelectionConverter<RequirementType> Type { get; }
+
+	
+
+		public enum RequirementType {
+			Day,
+			Process,
+			Time
+		}
+
+
 		protected Requirement() { }
 
 		protected Requirement(bool shouldBeMet) => ShouldBeMet = shouldBeMet;

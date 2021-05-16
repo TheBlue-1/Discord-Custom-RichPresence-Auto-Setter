@@ -5,7 +5,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Controls;
 using Discord_Custom_Rich_Presence_Auto_Setter.Models;
+using Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements;
 using Discord_Custom_Rich_Presence_Auto_Setter.Service;
 using Discord_Custom_Rich_Presence_Auto_Setter.Utils;
 using GameSDK.GameSDK;
@@ -33,8 +35,43 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.View {
 		}, () => List != App);
 		private ObservableCollection<IListable> App { get; } = new();
 
-		public record ViewHelperModel (ActivityType[] ActivityType,LobbyType[] LobbyType,bool[] Boolean);
-		public ViewHelperModel HelperModel { get; }= new ViewHelperModel(Enum.GetValues<ActivityType>(),Enum.GetValues<LobbyType>(),new []{false, true });
+		public record ViewHelperModel (ActivityType[] ActivityType,LobbyType[] LobbyType,bool[] Boolean,Requirement.RequirementType[] RequirementType);
+		public ViewHelperModel HelperModel { get; }= new ViewHelperModel(Enum.GetValues<ActivityType>(),Enum.GetValues<LobbyType>(),new []{false, true },Enum.GetValues<Requirement.RequirementType>());
+
+		public RelayCommand AddRequirement=> new RelayCommand(() => {
+			(Selected as Config)?.Requirements?.Add(new DayRequirement());
+		});
+
+
+		public Requirement.RequirementType SelectedRequirementType {
+			set {
+
+				if(!(Selected is Config config))
+					return;
+				int index = SelectedRequirementIndex;
+				if(index<0||index>=config.Requirements.Count)return;
+				if (config.Requirements[index].Type.Selected==value)return;
+
+				config.Requirements.RemoveAt(index);
+				switch (value) {
+					case Requirement.RequirementType.Day:
+
+						config.Requirements.Insert(index, new DayRequirement());
+						break;
+					case Requirement.RequirementType.Process:
+						config.Requirements.Insert(index, new ProcessRequirement());
+
+						break;
+					case Requirement.RequirementType.Time:
+						config.Requirements.Insert(index, new TimeRequirement());
+
+						break;
+						
+				}
+			}
+		}
+
+		public int SelectedRequirementIndex { get; set; }
 
 		public RelayCommand AppClick => new(() => { List = App; }, () => List != App);
 		public ApplicationSettings ApplicationSettings => Discord_Custom_Rich_Presence_Auto_Setter.App.Settings;

@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:view="clr-namespace:Discord_Custom_Rich_Presence_Auto_Setter.View"
-        xmlns:elements="clr-namespace:Discord_Custom_Rich_Presence_Auto_Setter.View.Elements"
         mc:Ignorable="d"
         Title="Discord Rich-Presence Setter" MinHeight="150" MinWidth="850">
     <Window.DataContext>
@@ -173,7 +172,6 @@
                             <RowDefinition Height="30px" />
                             <RowDefinition Height="30px" />
                             <RowDefinition Height="30px" />
-                            <RowDefinition Height="30px" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
 
@@ -199,11 +197,89 @@
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>
-                        <Label Grid.Row="3" Grid.Column="0">Requirements</Label>
-                        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Requirements}" />
-                        <Label Grid.Row="4" Grid.Column="0">ApplicationId</Label>
-                        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding ApplicationId}" />
-                        <elements:RequirementView  Grid.Row="4" Grid.Column="1" ></elements:RequirementView>
+                        <Label Grid.Row="3" Grid.Column="0">ApplicationId</Label>
+                        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding ApplicationId}" />
+                        <Label Grid.Row="4" Grid.Column="0">Requirements</Label>
+                        <Grid Grid.Row="4" Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="30px"/>
+                            </Grid.RowDefinitions>
+
+                            <ListView Grid.Row="0" Grid.Column="0"  ItemsSource="{Binding Requirements}" SelectedIndex="{Binding DataContext.SelectedRequirementIndex, RelativeSource={RelativeSource AncestorType=Window}}">
+
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="30px"/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <ComboBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding DataContext.HelperModel.RequirementType, RelativeSource={RelativeSource AncestorType=Window}}" 
+                                                  SelectedItem="{Binding Type.Selected, Mode=OneWay}" 
+                                                  SelectedValue="{Binding DataContext.SelectedRequirementType, RelativeSource={RelativeSource AncestorType=Window}, Mode=OneWayToSource}"
+                                        >
+
+
+                                               
+                                            </ComboBox>
+                                            <Grid Grid.Row="1" Grid.Column="0" Visibility="{Binding Type[Day]}">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="30px"/>
+                                                    <RowDefinition Height="30px"/>
+                                                    <RowDefinition Height="30px"/>
+                                                    <RowDefinition Height="30px"/>
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <Label Grid.Row="0" Grid.Column="0">Min Date</Label>
+                                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding MinDate}"></TextBox>
+                                                <Label Grid.Row="1" Grid.Column="0">Max Date</Label>
+                                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MaxDate}"></TextBox>
+                                                <Label Grid.Row="2" Grid.Column="0">Week Day</Label>
+                                                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding WeekDay}"></TextBox>
+                                                <Label Grid.Row="3" Grid.Column="0">Date Equality</Label>
+                                                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding DateEquality}"></TextBox>
+
+
+                                            </Grid>
+
+                                            <Grid Grid.Row="1" Grid.Column="0" Visibility="{Binding Type[Process]}">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="30px"/>
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <Label Grid.Row="0" Grid.Column="0"> Process Name</Label>
+                                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ProcessName}"></TextBox>
+                                        </Grid>
+                                            <Grid Grid.Row="1" Grid.Column="0" Visibility="{Binding Type[Time]}">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="30px"/>
+                                                    <RowDefinition Height="30px"/>
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <Label Grid.Row="0" Grid.Column="0">End Time</Label>
+                                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding EndTime}"></TextBox>
+                                                <Label Grid.Row="1" Grid.Column="0">Start Time</Label>
+                                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding StartTime}"></TextBox>
+                                            </Grid>
+
+
+
+                                        </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                            <Button Grid.Row="1" Grid.Column="0" Command="{Binding DataContext.AddRequirement, RelativeSource={RelativeSource AncestorType=Window}}"> Add</Button>
+                        </Grid>
                     </Grid>
                 </ScrollViewer>
             </Grid>
