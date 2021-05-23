@@ -206,24 +206,32 @@
                                 <RowDefinition Height="30px"/>
                             </Grid.RowDefinitions>
 
-                            <ListView Grid.Row="0" Grid.Column="0"  ItemsSource="{Binding Requirements}" SelectedIndex="{Binding DataContext.SelectedRequirementIndex, RelativeSource={RelativeSource AncestorType=Window}}">
-
-                            <ListView.ItemTemplate>
+                            <ListView Grid.Row="0" Grid.Column="0"  ItemsSource="{Binding Requirements}"  HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                                
+                                <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid>
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="30px"/>
                                                 <RowDefinition/>
                                             </Grid.RowDefinitions>
-                                            <ComboBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding DataContext.HelperModel.RequirementType, RelativeSource={RelativeSource AncestorType=Window}}" 
-                                                  SelectedItem="{Binding Type.Selected, Mode=OneWay}" 
-                                                  SelectedValue="{Binding DataContext.SelectedRequirementType, RelativeSource={RelativeSource AncestorType=Window}, Mode=OneWayToSource}"
-                                        >
+                                            <Grid Grid.Row="0" Grid.Column="0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition Width="50px"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <ComboBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding DataContext.HelperModel.RequirementType, RelativeSource={RelativeSource AncestorType=Window}}" 
+                                                          SelectedItem="{Binding Type.Selected}" 
+                                                  
+                                                >
 
 
-                                               
-                                            </ComboBox>
-                                            <Grid Grid.Row="1" Grid.Column="0" Visibility="{Binding Type[Day]}">
+                                                </ComboBox>
+                                                <Button  Grid.Row="0" Grid.Column="1" Command="{Binding DeleteRequirement}">🗑️</Button>
+
+</Grid>
+<Grid Grid.Row="1" Grid.Column="0" Visibility="{Binding Type[Day]}">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="30px"/>
                                                     <RowDefinition Height="30px"/>
@@ -239,9 +247,9 @@
                                                 <Label Grid.Row="1" Grid.Column="0">Max Date</Label>
                                                 <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MaxDate}"></TextBox>
                                                 <Label Grid.Row="2" Grid.Column="0">Week Day</Label>
-                                                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding WeekDay}"></TextBox>
+    <ComboBox Grid.Row="2" Grid.Column="1" SelectedValue="{Binding WeekDay}" ItemsSource="{Binding DataContext.HelperModel.WeekDay, RelativeSource={RelativeSource AncestorType=Window}}"></ComboBox>
                                                 <Label Grid.Row="3" Grid.Column="0">Date Equality</Label>
-                                                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding DateEquality}"></TextBox>
+                                                <ComboBox Grid.Row="2" Grid.Column="1" SelectedValue="{Binding DateEquality}" ItemsSource="{Binding DataContext.HelperModel.NumberEquality, RelativeSource={RelativeSource AncestorType=Window}}"></ComboBox>
 
 
                                             </Grid>
@@ -316,7 +324,9 @@
                         <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding RequirementCheckSpan}" />
                     </Grid>
                 </ScrollViewer>
-                <Button Grid.Row="1" Grid.Column="0" Command="{Binding OpenDataDirectory}">Show log files</Button>
+                <Button Grid.Row="1" Grid.Column="0" Command="{Binding OpenDataDirectory}">
+                    <TextBlock>Show log and data files (Total file size: <Run Text="{Binding TotalFileSize, Mode=OneWay}"/>)</TextBlock>
+                </Button>
 
             </Grid>
         </Grid>

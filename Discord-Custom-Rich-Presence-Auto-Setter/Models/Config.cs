@@ -16,7 +16,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 		private long? _applicationId;
 		private Lobby _lobby = new();
 		private Guid _lobbyId;
-		private ObservableCollection<Requirement> _requirements = new();
+		private RequirementList _requirements = new();
 
 		[JsonIgnore]
 		public Activity Activity {
@@ -60,7 +60,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 			}
 		}
 
-		public ObservableCollection<Requirement> Requirements {
+		public RequirementList Requirements {
 			get => _requirements;
 			set {
 				_requirements = value;
@@ -80,7 +80,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 			Activity = ICloneable.Clone(config.Activity);
 			Lobby = ICloneable.Clone(config.Lobby);
 			Lobby.Metadata = new ObservableDictionary<string, string>(config.Lobby.Metadata);
-			Requirements = new ObservableCollection<Requirement>(config.Requirements.Select(ICloneable.Clone));
+			Requirements = new RequirementList(config.Requirements.Select(ICloneable.Clone));
 		}
 
 		Config ICloneable<Config>.Clone() => new(this);

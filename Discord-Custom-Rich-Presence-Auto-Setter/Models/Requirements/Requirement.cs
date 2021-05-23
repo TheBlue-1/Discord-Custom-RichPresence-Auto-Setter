@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Discord_Custom_Rich_Presence_Auto_Setter.Models.Interfaces;
 using Discord_Custom_Rich_Presence_Auto_Setter.Utils;
+using Discord_Custom_Rich_Presence_Auto_Setter.View;
 using Newtonsoft.Json;
 using ICloneable = Discord_Custom_Rich_Presence_Auto_Setter.Models.Interfaces.ICloneable;
 #endregion
@@ -19,8 +20,10 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements {
 				OnPropertyChanged();
 			}
 		}
+
+		protected abstract  RequirementType RType { get; }
 		[JsonIgnore]
-		public abstract SelectionConverter<RequirementType> Type { get; }
+		public SelectionConverter<RequirementType> Type { get; }
 
 	
 
@@ -31,9 +34,28 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements {
 		}
 
 
-		protected Requirement() { }
+		protected Requirement() {
+			DeleteRequirement =  new RelayCommand(Delete);
+			Type = new SelectionConverter<RequirementType>( RType);
+            Type.SelectedT += RequirementTypeChanged;
+		}
 
-		protected Requirement(bool shouldBeMet) => ShouldBeMet = shouldBeMet;
+		public RelayCommand DeleteRequirement { get; }
+
+        private void RequirementTypeChanged(object sender, RequirementType e)
+        {
+            if(e==RType)return;
+			RequirementTypeChangeRequested?.Invoke(this,e);
+		}
+
+		private void Delete() {
+			RequirementTypeChangeRequested?.Invoke(this, null);
+		}
+
+		public delegate  void RequirementTypeChangeRequestedHandler(Requirement sender, RequirementType? requested); 
+		public event RequirementTypeChangeRequestedHandler RequirementTypeChangeRequested ;
+
+        protected Requirement(bool shouldBeMet):this() => ShouldBeMet = shouldBeMet;
 
 		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

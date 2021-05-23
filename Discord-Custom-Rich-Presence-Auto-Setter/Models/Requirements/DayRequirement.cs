@@ -29,7 +29,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements {
 				return WeekDay == default || now.DayOfWeek == WeekDay;
 			}
 		}
-		public override SelectionConverter<RequirementType> Type { get; } = new SelectionConverter<RequirementType>(RequirementType.Day);
+		protected override RequirementType RType { get; } = RequirementType.Day;
 
 		public NumberEquality? DateEquality {
 			get => _dateEquality;
@@ -53,7 +53,6 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements {
 			}
 		}
 
-		//isMonday,is equal date usw
 		public DayOfWeek? WeekDay {
 			get => _weekDay;
 			set {

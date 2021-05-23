@@ -15,7 +15,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements {
 				return (time > StartTime || StartTime == default) && (time < EndTime || EndTime == default);
 			}
 		}
-		public override SelectionConverter<RequirementType> Type { get; } = new SelectionConverter<RequirementType>(RequirementType.Time);
+		protected override RequirementType RType { get; } = RequirementType.Time;
 		public DateTime? EndTime {
 			get => _endTime;
 			set {

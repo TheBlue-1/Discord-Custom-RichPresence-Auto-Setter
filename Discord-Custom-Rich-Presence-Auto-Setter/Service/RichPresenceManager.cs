@@ -1,6 +1,7 @@
 ﻿#region
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Discord_Custom_Rich_Presence_Auto_Setter.Models;
 using Discord_Custom_Rich_Presence_Auto_Setter.Models.Interfaces;
@@ -35,12 +36,15 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 		public RichPresenceManager(long defaultApplicationId) => DefaultApplicationId = defaultApplicationId;
 		public event CurrentlyUsedConfigChangedHandler CurrentlyUsedConfigChanged;
 		public event ExceptionHandler ExceptionOccurred;
+		private CancellationTokenSource UpdaterCancelTokenSrc { get; }= new CancellationTokenSource();
+
 
 		public void Start() {
 			if (_updater != null) {
 				throw new InvalidOperationException("RP-Manager already running");
 			}
-			_updater = UpdatePeriodically(App.Settings.RequirementCheckSpan);
+			var token = UpdaterCancelTokenSrc.Token;
+			_updater = UpdatePeriodically(App.Settings.RequirementCheckSpan,token);
 		}
 
 		private async void Update() {
@@ -54,13 +58,15 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 			await UseConfig(null);
 		}
 
-		public async Task UpdatePeriodically(TimeSpan time) {
+		public async Task UpdatePeriodically(TimeSpan time,CancellationToken token) {
 			while (true) {
-				await Task.Delay(time);
+				await Task.Delay(time, token);
+				if (token.IsCancellationRequested) {
+					break;
+				}
 				Update();
 			}
 
-			// ReSharper disable once FunctionNeverReturns
 		}
 
 		private async Task UseConfig(Config config) {
@@ -68,13 +74,15 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 				return;
 			}
 
-			_currentConfig = ICloneable.Clone(config);
+			
 
 			if (config == null) {
+				_currentConfig = null;
 				Rpc = null;
 				CurrentlyUsedConfigChanged?.Invoke(null);
 				return;
 			}
+			_currentConfig = ICloneable.Clone(config);
 			if (Rpc?.ApplicationId != (config.ApplicationId ?? DefaultApplicationId)) {
 				Rpc = new RichPresenceSetter(config.ApplicationId ?? DefaultApplicationId);
 			}
@@ -88,6 +96,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 
 		public void Dispose() {
 			_rpc?.Dispose();
+			UpdaterCancelTokenSrc.Cancel();
 			_updater?.Dispose();
 		}
 	}

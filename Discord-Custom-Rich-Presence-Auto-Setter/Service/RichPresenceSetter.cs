@@ -1,5 +1,6 @@
 ﻿#region
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using GameSDK.GameSDK;
 using Activity = Discord_Custom_Rich_Presence_Auto_Setter.Models.Activity;
@@ -20,8 +21,9 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 			ApplicationId = applicationId;
 			Discord = new Discord(ApplicationId, (ulong)CreateFlags.Default);
 			ActivityManager.RegisterCommand();
+			var token = UpdaterCancelTokenSrc.Token;
 
-			_updater = UpdatePeriodically(App.Settings.DiscordCommunicationGap);
+			_updater = UpdatePeriodically(App.Settings.DiscordCommunicationGap,token);
 		}
 
 		public event ExceptionHandler ExceptionOccurred;
@@ -74,9 +76,10 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 			await tcs.Task;
 		}
 
-		public async Task UpdatePeriodically(TimeSpan time) {
+		public async Task UpdatePeriodically(TimeSpan time,CancellationToken token) {
 			while (true) {
-				await Task.Delay(time);
+				await Task.Delay(time,token);
+                if (token.IsCancellationRequested) { break;}
 				try {
 					Discord.RunCallbacks();
 				}
@@ -85,10 +88,11 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 				}
 			}
 
-			// ReSharper disable once FunctionNeverReturns
 		}
+		private CancellationTokenSource UpdaterCancelTokenSrc { get; } = new CancellationTokenSource();
 
 		public void Dispose() {
+			UpdaterCancelTokenSrc.Cancel();
 			_updater.Dispose();
 			Discord.Dispose();
 		}

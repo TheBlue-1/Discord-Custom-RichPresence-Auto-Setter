@@ -8,7 +8,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements {
 	public class ProcessRequirement : Requirement, ICloneable<ProcessRequirement>, IValuesComparable<ProcessRequirement> {
 		private string _processName = "";
 		public override bool IsMet => Process.GetProcessesByName(ProcessName).Length > 0;
-		public override SelectionConverter<RequirementType> Type { get; } = new SelectionConverter<RequirementType>(RequirementType.Process);
+		protected override RequirementType RType { get; } = RequirementType.Process;
 
 		public string ProcessName {
 			get => _processName;

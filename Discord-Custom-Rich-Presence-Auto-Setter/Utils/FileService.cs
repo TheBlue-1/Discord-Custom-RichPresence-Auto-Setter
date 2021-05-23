@@ -1,12 +1,14 @@
 ﻿#region
 using System;
+using System.ComponentModel;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 #endregion
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.Utils {
-	public class FileService {
+	public class FileService:INotifyPropertyChanged {
 		private const string ApplicationFolderName = "Discord_Custom_Rich_Presence_Auto_Setter";
 		private const string JsonFileEnding = ".json";
 		private const string SaveFileVersion = "v1";
@@ -18,6 +20,17 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Utils {
 		public static string ApplicationFolderPath =>
 			Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ApplicationFolderName, SaveFileVersion);
 		public static FileService Instance { get; } = new();
+
+		public long TotalFileBytes {
+			get {
+				long bytes = 0;
+				DirectoryInfo directoryInfo = new DirectoryInfo(ApplicationFolderPath);
+				foreach (FileInfo fileInfo in directoryInfo.GetFiles(string.Empty,SearchOption.AllDirectories)) {
+					bytes+=fileInfo.Length;
+				}
+				return bytes;
+			}
+		}
 
 		static FileService() { }
 
@@ -54,6 +67,13 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Utils {
 				string json = JsonConvert.SerializeObject(content, JsonSettings);
 				File.WriteAllText(Path.Combine(ApplicationFolderPath, fileName), json);
 			});
+			OnPropertyChanged(nameof(TotalFileBytes));
+		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 	}
 }

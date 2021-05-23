@@ -35,43 +35,17 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.View {
 		}, () => List != App);
 		private ObservableCollection<IListable> App { get; } = new();
 
-		public record ViewHelperModel (ActivityType[] ActivityType,LobbyType[] LobbyType,bool[] Boolean,Requirement.RequirementType[] RequirementType);
-		public ViewHelperModel HelperModel { get; }= new ViewHelperModel(Enum.GetValues<ActivityType>(),Enum.GetValues<LobbyType>(),new []{false, true },Enum.GetValues<Requirement.RequirementType>());
+		public record ViewHelperModel (DayRequirement.NumberEquality[] NumberEquality, DayOfWeek[] WeekDay, ActivityType[] ActivityType,LobbyType[] LobbyType,bool[] Boolean,Requirement.RequirementType[] RequirementType);
+		public ViewHelperModel HelperModel { get; }= new ViewHelperModel(Enum.GetValues<DayRequirement.NumberEquality>(),Enum.GetValues<DayOfWeek>(), Enum.GetValues<ActivityType>(), Enum.GetValues<LobbyType>(),new []{false, true },Enum.GetValues<Requirement.RequirementType>());
 
 		public RelayCommand AddRequirement=> new RelayCommand(() => {
 			(Selected as Config)?.Requirements?.Add(new DayRequirement());
 		});
 
 
-		public Requirement.RequirementType SelectedRequirementType {
-			set {
 
-				if(!(Selected is Config config))
-					return;
-				int index = SelectedRequirementIndex;
-				if(index<0||index>=config.Requirements.Count)return;
-				if (config.Requirements[index].Type.Selected==value)return;
-
-				config.Requirements.RemoveAt(index);
-				switch (value) {
-					case Requirement.RequirementType.Day:
-
-						config.Requirements.Insert(index, new DayRequirement());
-						break;
-					case Requirement.RequirementType.Process:
-						config.Requirements.Insert(index, new ProcessRequirement());
-
-						break;
-					case Requirement.RequirementType.Time:
-						config.Requirements.Insert(index, new TimeRequirement());
-
-						break;
-						
-				}
-			}
-		}
-
-		public int SelectedRequirementIndex { get; set; }
+		public string TotalFileSize =>  $"{FileService.Instance.TotalFileBytes/1024} kB" ;
+		
 
 		public RelayCommand AppClick => new(() => { List = App; }, () => List != App);
 		public ApplicationSettings ApplicationSettings => Discord_Custom_Rich_Presence_Auto_Setter.App.Settings;
@@ -136,9 +110,17 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.View {
 			RichPresenceManager.CurrentlyUsedConfigChanged += RichPresenceChanged;
 			RichPresenceManager.ExceptionOccurred += ManagerExceptionOccurred;
 			RichPresenceManager.Start();
+            FileService.Instance.PropertyChanged += TotalFileSizeChanged;
 		}
 
-		private void ManagerExceptionOccurred(Exception exception) {
+        private void TotalFileSizeChanged(object sender, PropertyChangedEventArgs e)
+        {
+			if (e.PropertyName == nameof (FileService.Instance.TotalFileBytes)) {
+				OnPropertyChanged(nameof(TotalFileSize));
+			}
+        }
+
+        private void ManagerExceptionOccurred(Exception exception) {
 			Status = $"Error: '{exception.Message}'";
 		}
 
