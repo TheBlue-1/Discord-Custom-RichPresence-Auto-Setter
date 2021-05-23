@@ -31,6 +31,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Utils {
 			}
 		}
 
+		// ReSharper disable once UnusedMember.Global
 		public ObservableDictionary() { }
 
 		public ObservableDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection) =>

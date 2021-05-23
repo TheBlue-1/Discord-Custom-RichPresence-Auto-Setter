@@ -1,7 +1,6 @@
 ﻿#region
 using System;
 using Discord_Custom_Rich_Presence_Auto_Setter.Models.Interfaces;
-using Discord_Custom_Rich_Presence_Auto_Setter.Utils;
 #endregion
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements {

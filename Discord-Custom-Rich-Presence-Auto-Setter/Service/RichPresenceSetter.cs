@@ -16,14 +16,15 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 
 		private Discord Discord { get; }
 		private LobbyManager LobbyManager => Discord.GetLobbyManager();
+		private CancellationTokenSource UpdaterCancelTokenSrc { get; } = new();
 
 		public RichPresenceSetter(long applicationId) {
 			ApplicationId = applicationId;
 			Discord = new Discord(ApplicationId, (ulong)CreateFlags.Default);
 			ActivityManager.RegisterCommand();
-			var token = UpdaterCancelTokenSrc.Token;
+			CancellationToken token = UpdaterCancelTokenSrc.Token;
 
-			_updater = UpdatePeriodically(App.Settings.DiscordCommunicationGap,token);
+			_updater = UpdatePeriodically(App.Settings.DiscordCommunicationGap, token);
 		}
 
 		public event ExceptionHandler ExceptionOccurred;
@@ -76,10 +77,12 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 			await tcs.Task;
 		}
 
-		public async Task UpdatePeriodically(TimeSpan time,CancellationToken token) {
+		public async Task UpdatePeriodically(TimeSpan time, CancellationToken token) {
 			while (true) {
-				await Task.Delay(time,token);
-                if (token.IsCancellationRequested) { break;}
+				await Task.Delay(time, token);
+				if (token.IsCancellationRequested) {
+					break;
+				}
 				try {
 					Discord.RunCallbacks();
 				}
@@ -87,9 +90,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 					ExceptionOccurred?.Invoke(e);
 				}
 			}
-
 		}
-		private CancellationTokenSource UpdaterCancelTokenSrc { get; } = new CancellationTokenSource();
 
 		public void Dispose() {
 			UpdaterCancelTokenSrc.Cancel();

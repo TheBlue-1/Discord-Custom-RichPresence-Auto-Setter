@@ -82,9 +82,11 @@
                         <Label Grid.Row="1" Grid.Column="0">Capacity</Label>
                         <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Capacity}" />
                         <Label Grid.Row="2" Grid.Column="0">Locked</Label>
-                        <ComboBox Grid.Row="2" Grid.Column="1" SelectedValue="{Binding Locked}" ItemsSource="{Binding DataContext.HelperModel.Boolean, RelativeSource={RelativeSource AncestorType=Window}}"></ComboBox>
+                        <ComboBox Grid.Row="2" Grid.Column="1" SelectedValue="{Binding Locked}"
+                                  ItemsSource="{Binding DataContext.HelperModel.Boolean, RelativeSource={RelativeSource AncestorType=Window}}" />
                         <Label Grid.Row="3" Grid.Column="0">Type</Label>
-                        <ComboBox Grid.Row="3" Grid.Column="1" SelectedValue="{Binding Type}" ItemsSource="{Binding DataContext.HelperModel.LobbyType, RelativeSource={RelativeSource AncestorType=Window}}"></ComboBox>
+                        <ComboBox Grid.Row="3" Grid.Column="1" SelectedValue="{Binding Type}"
+                                  ItemsSource="{Binding DataContext.HelperModel.LobbyType, RelativeSource={RelativeSource AncestorType=Window}}" />
                         <Label Grid.Row="4" Grid.Column="0">OwnerId</Label>
                         <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding OwnerId}" />
                         <Label Grid.Row="5" Grid.Column="0">Metadata</Label>
@@ -124,7 +126,8 @@
                         <Label Grid.Row="0" Grid.Column="0">Name</Label>
                         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name}" />
                         <Label Grid.Row="1" Grid.Column="0">Activity Type</Label>
-                        <ComboBox Grid.Row="1" Grid.Column="1" SelectedValue="{Binding ActivityType}" ItemsSource="{Binding DataContext.HelperModel.ActivityType, RelativeSource={RelativeSource AncestorType=Window}}"></ComboBox>
+                        <ComboBox Grid.Row="1" Grid.Column="1" SelectedValue="{Binding ActivityType}"
+                                  ItemsSource="{Binding DataContext.HelperModel.ActivityType, RelativeSource={RelativeSource AncestorType=Window}}" />
                         <Label Grid.Row="2" Grid.Column="0">ApplicationId</Label>
                         <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ApplicationId}" />
                         <Label Grid.Row="3" Grid.Column="0">State</Label>
@@ -132,7 +135,8 @@
                         <Label Grid.Row="4" Grid.Column="0">Details</Label>
                         <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Details}" />
                         <Label Grid.Row="5" Grid.Column="0">Instance</Label>
-                        <ComboBox Grid.Row="5" Grid.Column="1" SelectedValue="{Binding Instance}" ItemsSource="{Binding DataContext.HelperModel.Boolean, RelativeSource={RelativeSource AncestorType=Window}}"></ComboBox>
+                        <ComboBox Grid.Row="5" Grid.Column="1" SelectedValue="{Binding Instance}"
+                                  ItemsSource="{Binding DataContext.HelperModel.Boolean, RelativeSource={RelativeSource AncestorType=Window}}" />
                         <Label Grid.Row="6" Grid.Column="0">StartTimestamp</Label>
                         <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding StartTimestamp}" />
                         <Label Grid.Row="7" Grid.Column="0">EndTimestamp</Label>
@@ -178,21 +182,23 @@
                         <Label Grid.Row="0" Grid.Column="0">Name</Label>
                         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name}" />
                         <Label Grid.Row="1" Grid.Column="0">Activity</Label>
-                        <ComboBox Grid.Row="1" Grid.Column="1"  SelectedValue="{Binding Activity}" ItemsSource="{Binding DataContext.Data.Activities, RelativeSource={RelativeSource AncestorType=Window}}">
+                        <ComboBox Grid.Row="1" Grid.Column="1" SelectedValue="{Binding Activity}"
+                                  ItemsSource="{Binding DataContext.Data.Activities, RelativeSource={RelativeSource AncestorType=Window}}">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
-                                  <Grid>
-                                      <TextBlock Text="{Binding Name}"></TextBlock>
-                                  </Grid>
+                                    <Grid>
+                                        <TextBlock Text="{Binding Name}" />
+                                    </Grid>
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>
                         <Label Grid.Row="2" Grid.Column="0">Lobby</Label>
-                        <ComboBox Grid.Row="2" Grid.Column="1"  SelectedValue="{Binding Lobby}" ItemsSource="{Binding DataContext.Data.Lobbies, RelativeSource={RelativeSource AncestorType=Window}}">
+                        <ComboBox Grid.Row="2" Grid.Column="1" SelectedValue="{Binding Lobby}"
+                                  ItemsSource="{Binding DataContext.Data.Lobbies, RelativeSource={RelativeSource AncestorType=Window}}">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <Grid>
-                                        <TextBlock Text="{Binding Name}"></TextBlock>
+                                        <TextBlock Text="{Binding Name}" />
                                     </Grid>
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
@@ -202,91 +208,101 @@
                         <Label Grid.Row="4" Grid.Column="0">Requirements</Label>
                         <Grid Grid.Row="4" Grid.Column="1">
                             <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition Height="30px"/>
+                                <RowDefinition />
+                                <RowDefinition Height="30px" />
                             </Grid.RowDefinitions>
 
-                            <ListView Grid.Row="0" Grid.Column="0"  ItemsSource="{Binding Requirements}"  HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
-                                
+                            <ListView Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Requirements}"
+                                      HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+
                                 <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
+                                    <DataTemplate>
+                                        <Grid>
                                             <Grid.RowDefinitions>
-                                                <RowDefinition Height="30px"/>
-                                                <RowDefinition/>
+                                                <RowDefinition Height="30px" />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
                                             <Grid Grid.Row="0" Grid.Column="0">
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition/>
-                                                    <ColumnDefinition Width="50px"/>
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition Width="50px" />
                                                 </Grid.ColumnDefinitions>
 
-                                                <ComboBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding DataContext.HelperModel.RequirementType, RelativeSource={RelativeSource AncestorType=Window}}" 
-                                                          SelectedItem="{Binding Type.Selected}" 
-                                                  
-                                                >
+                                                <ComboBox Grid.Row="0" Grid.Column="0"
+                                                          ItemsSource="{Binding DataContext.HelperModel.RequirementType, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                          SelectedItem="{Binding Type.Selected}" />
 
+                                                <Button Grid.Row="0" Grid.Column="1"
+                                                        Command="{Binding DeleteRequirement}">
+                                                    🗑️
+                                                </Button>
 
-                                                </ComboBox>
-                                                <Button  Grid.Row="0" Grid.Column="1" Command="{Binding DeleteRequirement}">🗑️</Button>
-
-</Grid>
-<Grid Grid.Row="1" Grid.Column="0" Visibility="{Binding Type[Day]}">
+                                            </Grid>
+                                            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                                            <Grid Grid.Row="1" Grid.Column="0" Visibility="{Binding Type[Day]}">
                                                 <Grid.RowDefinitions>
-                                                    <RowDefinition Height="30px"/>
-                                                    <RowDefinition Height="30px"/>
-                                                    <RowDefinition Height="30px"/>
-                                                    <RowDefinition Height="30px"/>
+                                                    <RowDefinition Height="30px" />
+                                                    <RowDefinition Height="30px" />
+                                                    <RowDefinition Height="30px" />
+                                                    <RowDefinition Height="30px" />
                                                 </Grid.RowDefinitions>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition />
                                                     <ColumnDefinition />
                                                 </Grid.ColumnDefinitions>
                                                 <Label Grid.Row="0" Grid.Column="0">Min Date</Label>
-                                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding MinDate}"></TextBox>
+
+                                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding MinDate}" />
+
                                                 <Label Grid.Row="1" Grid.Column="0">Max Date</Label>
-                                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MaxDate}"></TextBox>
+                                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MaxDate}" />
                                                 <Label Grid.Row="2" Grid.Column="0">Week Day</Label>
-    <ComboBox Grid.Row="2" Grid.Column="1" SelectedValue="{Binding WeekDay}" ItemsSource="{Binding DataContext.HelperModel.WeekDay, RelativeSource={RelativeSource AncestorType=Window}}"></ComboBox>
+                                                <ComboBox Grid.Row="2" Grid.Column="1"
+                                                          SelectedValue="{Binding WeekDay}"
+                                                          ItemsSource="{Binding DataContext.HelperModel.WeekDay, RelativeSource={RelativeSource AncestorType=Window}}" />
                                                 <Label Grid.Row="3" Grid.Column="0">Date Equality</Label>
-                                                <ComboBox Grid.Row="2" Grid.Column="1" SelectedValue="{Binding DateEquality}" ItemsSource="{Binding DataContext.HelperModel.NumberEquality, RelativeSource={RelativeSource AncestorType=Window}}"></ComboBox>
+                                                <ComboBox Grid.Row="2" Grid.Column="1"
+                                                          SelectedValue="{Binding DateEquality}"
+                                                          ItemsSource="{Binding DataContext.HelperModel.NumberEquality, RelativeSource={RelativeSource AncestorType=Window}}" />
 
 
                                             </Grid>
 
                                             <Grid Grid.Row="1" Grid.Column="0" Visibility="{Binding Type[Process]}">
                                                 <Grid.RowDefinitions>
-                                                    <RowDefinition Height="30px"/>
+                                                    <RowDefinition Height="30px" />
                                                 </Grid.RowDefinitions>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition />
                                                     <ColumnDefinition />
                                                 </Grid.ColumnDefinitions>
                                                 <Label Grid.Row="0" Grid.Column="0"> Process Name</Label>
-                                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ProcessName}"></TextBox>
-                                        </Grid>
+                                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ProcessName}" />
+                                            </Grid>
                                             <Grid Grid.Row="1" Grid.Column="0" Visibility="{Binding Type[Time]}">
                                                 <Grid.RowDefinitions>
-                                                    <RowDefinition Height="30px"/>
-                                                    <RowDefinition Height="30px"/>
+                                                    <RowDefinition Height="30px" />
+                                                    <RowDefinition Height="30px" />
                                                 </Grid.RowDefinitions>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition />
                                                     <ColumnDefinition />
                                                 </Grid.ColumnDefinitions>
                                                 <Label Grid.Row="0" Grid.Column="0">End Time</Label>
-                                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding EndTime}"></TextBox>
+                                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding EndTime}" />
                                                 <Label Grid.Row="1" Grid.Column="0">Start Time</Label>
-                                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding StartTime}"></TextBox>
+                                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding StartTime}" />
                                             </Grid>
-
-
+                                            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
 
                                         </Grid>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                            <Button Grid.Row="1" Grid.Column="0" Command="{Binding DataContext.AddRequirement, RelativeSource={RelativeSource AncestorType=Window}}"> Add</Button>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                            <Button Grid.Row="1" Grid.Column="0"
+                                    Command="{Binding DataContext.AddRequirement, RelativeSource={RelativeSource AncestorType=Window}}">
+                                Add
+                            </Button>
                         </Grid>
                     </Grid>
                 </ScrollViewer>
@@ -325,7 +341,10 @@
                     </Grid>
                 </ScrollViewer>
                 <Button Grid.Row="1" Grid.Column="0" Command="{Binding OpenDataDirectory}">
-                    <TextBlock>Show log and data files (Total file size: <Run Text="{Binding TotalFileSize, Mode=OneWay}"/>)</TextBlock>
+                    <TextBlock>
+                        Show log and data files (Total file size:
+                        <Run Text="{Binding TotalFileSize, Mode=OneWay}" />)
+                    </TextBlock>
                 </Button>
 
             </Grid>

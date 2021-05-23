@@ -2,6 +2,8 @@
 using System;
 using System.Linq.Expressions;
 using System.Windows.Input;
+
+// ReSharper disable UnusedMember.Global
 #endregion
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.View {

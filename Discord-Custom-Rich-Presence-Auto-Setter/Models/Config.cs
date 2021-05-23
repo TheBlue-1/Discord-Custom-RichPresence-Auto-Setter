@@ -1,6 +1,5 @@
 ﻿#region
 using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using Discord_Custom_Rich_Presence_Auto_Setter.Models.Interfaces;
 using Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements;

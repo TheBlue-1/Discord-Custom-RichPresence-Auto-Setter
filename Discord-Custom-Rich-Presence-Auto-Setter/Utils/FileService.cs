@@ -2,13 +2,14 @@
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 #endregion
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.Utils {
-	public class FileService:INotifyPropertyChanged {
+	public class FileService : INotifyPropertyChanged {
 		private const string ApplicationFolderName = "Discord_Custom_Rich_Presence_Auto_Setter";
 		private const string JsonFileEnding = ".json";
 		private const string SaveFileVersion = "v1";
@@ -23,12 +24,8 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Utils {
 
 		public long TotalFileBytes {
 			get {
-				long bytes = 0;
-				DirectoryInfo directoryInfo = new DirectoryInfo(ApplicationFolderPath);
-				foreach (FileInfo fileInfo in directoryInfo.GetFiles(string.Empty,SearchOption.AllDirectories)) {
-					bytes+=fileInfo.Length;
-				}
-				return bytes;
+				DirectoryInfo directoryInfo = new(ApplicationFolderPath);
+				return directoryInfo.GetFiles(string.Empty, SearchOption.AllDirectories).Sum(fileInfo => fileInfo.Length);
 			}
 		}
 
@@ -50,6 +47,10 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Utils {
 			}
 		}
 
+		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
+
 		public T ReadJsonFromFile<T>(string fileName)
 			where T : new() {
 			fileName = Path.Combine(ApplicationFolderPath, fileName + JsonFileEnding);
@@ -67,13 +68,9 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Utils {
 				string json = JsonConvert.SerializeObject(content, JsonSettings);
 				File.WriteAllText(Path.Combine(ApplicationFolderPath, fileName), json);
 			});
-			OnPropertyChanged(nameof(TotalFileBytes));
+			OnPropertyChanged(nameof (TotalFileBytes));
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
-
-		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-		}
 	}
 }

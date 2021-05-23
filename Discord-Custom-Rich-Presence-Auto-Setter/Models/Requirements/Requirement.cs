@@ -11,8 +11,16 @@ using ICloneable = Discord_Custom_Rich_Presence_Auto_Setter.Models.Interfaces.IC
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements {
 	public abstract class Requirement : INotifyPropertyChanged, ICloneable<Requirement>, IValuesComparable<Requirement> {
+		public delegate void RequirementTypeChangeRequestedHandler(Requirement sender, RequirementType? requested);
+
 		private bool _shouldBeMet;
 		public abstract bool IsMet { get; }
+
+		protected abstract RequirementType RType { get; }
+
+		public RelayCommand DeleteRequirement { get; }
+		[JsonIgnore]
+		public SelectionConverter<RequirementType> Type { get; }
 		public bool ShouldBeMet {
 			get => _shouldBeMet;
 			set {
@@ -21,44 +29,30 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements {
 			}
 		}
 
-		protected abstract  RequirementType RType { get; }
-		[JsonIgnore]
-		public SelectionConverter<RequirementType> Type { get; }
-
-	
-
-		public enum RequirementType {
-			Day,
-			Process,
-			Time
-		}
-
-
 		protected Requirement() {
-			DeleteRequirement =  new RelayCommand(Delete);
-			Type = new SelectionConverter<RequirementType>( RType);
-            Type.SelectedT += RequirementTypeChanged;
+			DeleteRequirement = new RelayCommand(Delete);
+
+			// ReSharper disable once VirtualMemberCallInConstructor
+			Type = new SelectionConverter<RequirementType>(RType);
+			Type.SelectedT += RequirementTypeChanged;
 		}
 
-		public RelayCommand DeleteRequirement { get; }
-
-        private void RequirementTypeChanged(object sender, RequirementType e)
-        {
-            if(e==RType)return;
-			RequirementTypeChangeRequested?.Invoke(this,e);
-		}
+		protected Requirement(bool shouldBeMet) : this() => ShouldBeMet = shouldBeMet;
+		public event RequirementTypeChangeRequestedHandler RequirementTypeChangeRequested;
 
 		private void Delete() {
 			RequirementTypeChangeRequested?.Invoke(this, null);
 		}
 
-		public delegate  void RequirementTypeChangeRequestedHandler(Requirement sender, RequirementType? requested); 
-		public event RequirementTypeChangeRequestedHandler RequirementTypeChangeRequested ;
-
-        protected Requirement(bool shouldBeMet):this() => ShouldBeMet = shouldBeMet;
-
 		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
+
+		private void RequirementTypeChanged(object sender, RequirementType e) {
+			if (e == RType) {
+				return;
+			}
+			RequirementTypeChangeRequested?.Invoke(this, e);
 		}
 
 		Requirement ICloneable<Requirement>.Clone() {
@@ -79,6 +73,12 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements {
 				TimeRequirement timeRequirement => IValuesComparable.ValuesCompare(timeRequirement, other as TimeRequirement),
 				_ => throw new NotImplementedException("Unknown RequirementType at ValuesCompare")
 			};
+		}
+
+		public enum RequirementType {
+			Day,
+			Process,
+			Time
 		}
 	}
 }

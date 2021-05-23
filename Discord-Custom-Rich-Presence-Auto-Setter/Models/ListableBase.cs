@@ -17,6 +17,8 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 				OnPropertyChanged();
 			}
 		}
+
+		// ReSharper disable once UnusedMember.Global
 		protected ListableBase() { }
 
 		protected ListableBase(string name) {

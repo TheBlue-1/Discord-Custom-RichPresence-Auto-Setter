@@ -3,9 +3,9 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Controls;
 using Discord_Custom_Rich_Presence_Auto_Setter.Models;
 using Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements;
 using Discord_Custom_Rich_Presence_Auto_Setter.Service;
@@ -33,19 +33,9 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.View {
 				Data.Lobbies.Add(new Lobby());
 			}
 		}, () => List != App);
+
+		public RelayCommand AddRequirement => new(() => { (Selected as Config)?.Requirements?.Add(new DayRequirement()); });
 		private ObservableCollection<IListable> App { get; } = new();
-
-		public record ViewHelperModel (DayRequirement.NumberEquality[] NumberEquality, DayOfWeek[] WeekDay, ActivityType[] ActivityType,LobbyType[] LobbyType,bool[] Boolean,Requirement.RequirementType[] RequirementType);
-		public ViewHelperModel HelperModel { get; }= new ViewHelperModel(Enum.GetValues<DayRequirement.NumberEquality>(),Enum.GetValues<DayOfWeek>(), Enum.GetValues<ActivityType>(), Enum.GetValues<LobbyType>(),new []{false, true },Enum.GetValues<Requirement.RequirementType>());
-
-		public RelayCommand AddRequirement=> new RelayCommand(() => {
-			(Selected as Config)?.Requirements?.Add(new DayRequirement());
-		});
-
-
-
-		public string TotalFileSize =>  $"{FileService.Instance.TotalFileBytes/1024} kB" ;
-		
 
 		public RelayCommand AppClick => new(() => { List = App; }, () => List != App);
 		public ApplicationSettings ApplicationSettings => Discord_Custom_Rich_Presence_Auto_Setter.App.Settings;
@@ -57,6 +47,8 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.View {
 		public RelayCommand DeleteClick => new(() => { List.Remove(Selected); }, () => Selected != null);
 		public RelayCommand DownClick => new(() => { List.Move(SelectedIndex, SelectedIndex + 1); }, () => Selected != null && SelectedIndex < List.Count - 1);
 		public RelayCommand DuplicateClick => new(() => { List.Insert(SelectedIndex + 1, ICloneable.Clone(Selected)); }, () => Selected != null);
+		public ViewHelperModel HelperModel { get; } = new(Enum.GetValues<DayRequirement.NumberEquality>(), Enum.GetValues<DayOfWeek>(),
+			Enum.GetValues<ActivityType>(), Enum.GetValues<LobbyType>(), new[] { false, true }, Enum.GetValues<Requirement.RequirementType>());
 		public RelayCommand LobbiesClick => new(() => { List = Data.Lobbies; }, () => List != Data.Lobbies);
 
 		public Visibility LobbyVisibility => SelectedLobby == null ? Visibility.Hidden : Visibility.Visible;
@@ -69,6 +61,8 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.View {
 
 		public Config SelectedConfig => Selected as Config;
 		public Lobby SelectedLobby => Selected as Lobby;
+
+		public string TotalFileSize => $"{FileService.Instance.TotalFileBytes / 1024} kB";
 		public RelayCommand UpClick => new(() => { List.Move(SelectedIndex, SelectedIndex - 1); }, () => Selected != null && SelectedIndex > 0);
 
 		public ObservableCollection<IListable> List {
@@ -110,17 +104,10 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.View {
 			RichPresenceManager.CurrentlyUsedConfigChanged += RichPresenceChanged;
 			RichPresenceManager.ExceptionOccurred += ManagerExceptionOccurred;
 			RichPresenceManager.Start();
-            FileService.Instance.PropertyChanged += TotalFileSizeChanged;
+			FileService.Instance.PropertyChanged += TotalFileSizeChanged;
 		}
 
-        private void TotalFileSizeChanged(object sender, PropertyChangedEventArgs e)
-        {
-			if (e.PropertyName == nameof (FileService.Instance.TotalFileBytes)) {
-				OnPropertyChanged(nameof(TotalFileSize));
-			}
-        }
-
-        private void ManagerExceptionOccurred(Exception exception) {
+		private void ManagerExceptionOccurred(Exception exception) {
 			Status = $"Error: '{exception.Message}'";
 		}
 
@@ -132,6 +119,16 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.View {
 			Status = config != null ? $"{config.Name} is currently set as your rich presence" : "No rich presence is currently set";
 		}
 
+		private void TotalFileSizeChanged(object sender, PropertyChangedEventArgs e) {
+			if (e.PropertyName == nameof (FileService.Instance.TotalFileBytes)) {
+				OnPropertyChanged(nameof (TotalFileSize));
+			}
+		}
+
 		public event PropertyChangedEventHandler PropertyChanged;
+
+		[SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
+		public record ViewHelperModel (DayRequirement.NumberEquality[] NumberEquality, DayOfWeek[] WeekDay, ActivityType[] ActivityType, LobbyType[] LobbyType,
+			bool[] Boolean, Requirement.RequirementType[] RequirementType);
 	}
 }
