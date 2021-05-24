@@ -7,6 +7,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using Discord_Custom_Rich_Presence_Auto_Setter.Models;
+using Discord_Custom_Rich_Presence_Auto_Setter.Models.Interfaces;
+using Discord_Custom_Rich_Presence_Auto_Setter.Models.Metadata;
 using Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements;
 using Discord_Custom_Rich_Presence_Auto_Setter.Service;
 using Discord_Custom_Rich_Presence_Auto_Setter.Utils;
@@ -33,6 +35,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.View {
 				Data.Lobbies.Add(new Lobby());
 			}
 		}, () => List != App);
+		public RelayCommand AddMetaData => new(() => { (Selected as Lobby)?.Metadata?.Add(new Metadata()); });
 
 		public RelayCommand AddRequirement => new(() => { (Selected as Config)?.Requirements?.Add(new DayRequirement()); });
 		private ObservableCollection<IListable> App { get; } = new();
@@ -45,6 +48,11 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.View {
 		public Visibility ConfigVisibility => SelectedConfig == null ? Visibility.Hidden : Visibility.Visible;
 		public FileSyncedConfigs Data { get; }
 		public RelayCommand DeleteClick => new(() => { List.Remove(Selected); }, () => Selected != null);
+
+		public RelayCommand DeleteMetaData => new(obj => {
+			Metadata metadata = obj as Metadata;
+			(Selected as Lobby)?.Metadata?.Remove(metadata);
+		});
 		public RelayCommand DownClick => new(() => { List.Move(SelectedIndex, SelectedIndex + 1); }, () => Selected != null && SelectedIndex < List.Count - 1);
 		public RelayCommand DuplicateClick => new(() => { List.Insert(SelectedIndex + 1, ICloneable.Clone(Selected)); }, () => Selected != null);
 		public ViewHelperModel HelperModel { get; } = new(Enum.GetValues<DayRequirement.NumberEquality>(), Enum.GetValues<DayOfWeek>(),

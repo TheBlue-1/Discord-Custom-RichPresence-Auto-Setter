@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord_Custom_Rich_Presence_Auto_Setter.Models;
+using Discord_Custom_Rich_Presence_Auto_Setter.Models.Interfaces;
 #endregion
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.Utils {

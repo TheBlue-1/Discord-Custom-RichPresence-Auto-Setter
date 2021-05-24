@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Linq;
 #endregion
 
 namespace Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements {
@@ -10,9 +12,29 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements {
 		public RequirementList(IEnumerable<Requirement> collection) : base(collection) { }
 
 		// ReSharper disable once UnusedMember.Global
-		public RequirementList(List<Requirement> list) : base(list) { }
+		public RequirementList(IReadOnlyCollection<Requirement> list) : this(list.AsEnumerable()) { }
 
-		public RequirementList() { }
+		public RequirementList() : this(new List<Requirement>()) { }
+		public event PropertyChangedEventHandler InnerPropertyChanged;
+
+		private void InnerPropertyChangedAdder(NotifyCollectionChangedEventArgs e) {
+			if (e.OldItems != null) {
+				foreach (INotifyPropertyChanged item in e.OldItems) {
+					item.PropertyChanged -= InnerPropertyChangedHandler;
+				}
+			}
+			if (e.NewItems == null) {
+				return;
+			}
+
+			foreach (INotifyPropertyChanged item in e.NewItems) {
+				item.PropertyChanged += InnerPropertyChangedHandler;
+			}
+		}
+
+		private void InnerPropertyChangedHandler(object sender, PropertyChangedEventArgs e) {
+			InnerPropertyChanged?.Invoke(sender, e);
+		}
 
 		protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e) {
 			base.OnCollectionChanged(e);
@@ -45,6 +67,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models.Requirements {
 				case NotifyCollectionChangedAction.Move : break;
 				default : throw new ArgumentOutOfRangeException();
 			}
+			InnerPropertyChangedAdder(e);
 		}
 
 		private void RequirementTypeChangeRequested(Requirement sender, Requirement.RequirementType? requested) {

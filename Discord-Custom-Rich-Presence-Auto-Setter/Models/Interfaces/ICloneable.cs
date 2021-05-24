@@ -4,7 +4,7 @@
 		protected T Clone();
 
 		public new static T1 Clone<T1>(T1 original)
-			where T1 : ICloneable<T1> => original.Clone();
+			where T1 : ICloneable<T1> => original == null ? default : original.Clone();
 	}
 
 	public interface ICloneable {

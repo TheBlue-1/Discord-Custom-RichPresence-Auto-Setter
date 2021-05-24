@@ -1,7 +1,7 @@
 ﻿#region
 using System.Linq;
 using Discord_Custom_Rich_Presence_Auto_Setter.Models.Interfaces;
-using Discord_Custom_Rich_Presence_Auto_Setter.Utils;
+using Discord_Custom_Rich_Presence_Auto_Setter.Models.Metadata;
 using GameSDK.GameSDK;
 using Newtonsoft.Json;
 #endregion
@@ -10,7 +10,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 	public class Lobby : ListableBase, ICloneable<Lobby>, IValuesComparable<Lobby> {
 		private uint _capacity = 1;
 		private bool _locked;
-		private ObservableDictionary<string, string> _metadata;
+		private MetaDataList _metadata;
 		private long _ownerId;
 		private LobbyType _type = LobbyType.Private;
 		public uint Capacity {
@@ -27,18 +27,18 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 				OnPropertyChanged();
 			}
 		}
-		public ObservableDictionary<string, string> Metadata {
+		public MetaDataList Metadata {
 			get => _metadata;
 			set {
 				if (_metadata != null) {
 					_metadata.CollectionChanged -= MetadataChanged;
-					_metadata.PropertyChanged -= MetadataChanged;
+					_metadata.InnerPropertyChanged -= MetadataChanged;
 				}
 
 				_metadata = value;
 				if (_metadata != null) {
 					_metadata.CollectionChanged += MetadataChanged;
-					_metadata.PropertyChanged += MetadataChanged;
+					_metadata.InnerPropertyChanged += MetadataChanged;
 				}
 				OnPropertyChanged();
 			}
@@ -60,7 +60,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 		}
 
 		[JsonConstructor]
-		public Lobby() { }
+		public Lobby() => Metadata = new MetaDataList();
 
 		protected Lobby(Lobby lobby) : base(lobby.Name) {
 			Capacity = lobby.Capacity;
@@ -97,7 +97,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Models {
 				return true;
 			}
 
-			if (Metadata.Where((_, i) => other.Metadata.ImmutableCollection[i].Equals(Metadata.ImmutableCollection[i])).Any()) {
+			if (Metadata.Where((t, i) => other.Metadata[i] != t).Any()) {
 				return false;
 			}
 

@@ -73,7 +73,6 @@
                             <RowDefinition Height="30px" />
                             <RowDefinition Height="30px" />
                             <RowDefinition Height="30px" />
-                            <RowDefinition Height="30px" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
 
@@ -90,7 +89,53 @@
                         <Label Grid.Row="4" Grid.Column="0">OwnerId</Label>
                         <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding OwnerId}" />
                         <Label Grid.Row="5" Grid.Column="0">Metadata</Label>
-                        <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Metadata}" />
+                        <Grid Grid.Row="5" Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition Height="30px" />
+                            </Grid.RowDefinitions>
+
+                            <ListView Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Metadata}"
+                                      HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="30px" />
+                                                <RowDefinition Height="30px" />
+                                            </Grid.RowDefinitions>
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                                <ColumnDefinition Width="50px" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Grid.Row="0" Grid.Column="0">Key</Label>
+
+
+                                            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Key}" />
+                                            <Label Grid.Row="1" Grid.Column="0">Value</Label>
+
+                                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value}" />
+
+                                            <Button Grid.Row="0" Grid.Column="2" Grid.RowSpan="2"
+                                                    CommandParameter="{Binding .}"
+                                                    Command="{Binding DataContext.DeleteMetaData, RelativeSource={RelativeSource AncestorType=Window}}">
+                                                🗑️
+                                            </Button>
+
+
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                            <Button Grid.Row="1" Grid.Column="0"
+                                    Command="{Binding DataContext.AddMetaData, RelativeSource={RelativeSource AncestorType=Window}}">
+                                Add
+                            </Button>
+                        </Grid>
+
                     </Grid>
                 </ScrollViewer>
             </Grid>

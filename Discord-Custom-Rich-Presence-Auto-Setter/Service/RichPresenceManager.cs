@@ -21,7 +21,6 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 		public FileSyncedConfigs Configs { get; } = new();
 
 		private long DefaultApplicationId { get; }
-		private CancellationTokenSource UpdaterCancelTokenSrc { get; } = new();
 
 		private RichPresenceSetter Rpc {
 			get => _rpc;
@@ -33,6 +32,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 				}
 			}
 		}
+		private CancellationTokenSource UpdaterCancelTokenSrc { get; set; } = new();
 
 		public RichPresenceManager(long defaultApplicationId) => DefaultApplicationId = defaultApplicationId;
 		public event CurrentlyUsedConfigChangedHandler CurrentlyUsedConfigChanged;
@@ -42,6 +42,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 			if (_updater != null) {
 				throw new InvalidOperationException("RP-Manager already running");
 			}
+			UpdaterCancelTokenSrc = new CancellationTokenSource();
 			CancellationToken token = UpdaterCancelTokenSrc.Token;
 			_updater = UpdatePeriodically(App.Settings.RequirementCheckSpan, token);
 		}
@@ -93,7 +94,6 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 		public void Dispose() {
 			_rpc?.Dispose();
 			UpdaterCancelTokenSrc.Cancel();
-			_updater?.Dispose();
 		}
 	}
 }

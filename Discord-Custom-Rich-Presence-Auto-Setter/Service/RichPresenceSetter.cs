@@ -10,21 +10,21 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 	public class RichPresenceSetter : IDisposable {
 		public delegate void ExceptionHandler(Exception exception);
 
-		private readonly Task _updater;
 		private ActivityManager ActivityManager => Discord.GetActivityManager();
 		public long ApplicationId { get; }
 
 		private Discord Discord { get; }
 		private LobbyManager LobbyManager => Discord.GetLobbyManager();
-		private CancellationTokenSource UpdaterCancelTokenSrc { get; } = new();
+		private CancellationTokenSource UpdaterCancelTokenSrc { get; }
 
 		public RichPresenceSetter(long applicationId) {
 			ApplicationId = applicationId;
 			Discord = new Discord(ApplicationId, (ulong)CreateFlags.Default);
 			ActivityManager.RegisterCommand();
+			UpdaterCancelTokenSrc = new CancellationTokenSource();
 			CancellationToken token = UpdaterCancelTokenSrc.Token;
 
-			_updater = UpdatePeriodically(App.Settings.DiscordCommunicationGap, token);
+			Task _ = UpdatePeriodically(App.Settings.DiscordCommunicationGap, token);
 		}
 
 		public event ExceptionHandler ExceptionOccurred;
@@ -36,9 +36,11 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 			transaction.SetOwner(lobby.OwnerId);
 
 			transaction.SetType(lobby.Type);
-			foreach ((string key, string value) in lobby.Metadata) {
-				transaction.SetMetadata(key, value);
-			}
+
+			//results in AccessViolationException
+			//foreach ((string key, string value) in lobby.Metadata) {
+			//	transaction.SetMetadata(key, value);
+			//}
 
 			TaskCompletionSource<Lobby> tcs = new();
 			LobbyManager.CreateLobby(transaction, (Result result, ref Lobby createdLobby) => {
@@ -94,7 +96,7 @@ namespace Discord_Custom_Rich_Presence_Auto_Setter.Service {
 
 		public void Dispose() {
 			UpdaterCancelTokenSrc.Cancel();
-			_updater.Dispose();
+
 			Discord.Dispose();
 		}
 	}
